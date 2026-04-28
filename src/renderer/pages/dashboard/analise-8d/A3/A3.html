@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Metodologia 8D</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🎯 Metodologia 8D</h1>
+        <p>Análise de Problemas em 8 Disciplinas</p>
+      </header>
+
+      <div class="disciplines-grid" id="disciplinesGrid"></div>
+
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-number" id="completedCount">0</div>
+          <div class="stat-label">Disciplinas Analisadas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">7</div>
+          <div class="stat-label">Total de Disciplinas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="progressPercent">0%</div>
+          <div class="stat-label">Progresso</div>
+        </div>
+      </div>
+
+      <div class="final-report-section" id="finalReportSection">
+        <h2>🎉 Análise Completa!</h2>
+        <p>
+          Todas as disciplinas foram finalizadas. Gere o relatório final agora.
+        </p>
+        <div class="final-report-buttons">
+          <button class="btn btn-success" onclick="generateFinalReport()">
+            📊 Gerar Relatório Completo
+          </button>
+          <button class="btn btn-info" onclick="exportToFile()">
+            💾 Exportar como PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

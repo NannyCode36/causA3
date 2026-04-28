@@ -1,0 +1,1378 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Análise 8D - Metodologia</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+      }
+
+      header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      header p {
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+
+      .disciplines-grid {
+        display: grid;
+        gap: 15px;
+      }
+
+      .discipline-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+        cursor: pointer;
+      }
+
+      .discipline-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .discipline-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .discipline-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        font-size: 1.3em;
+        font-weight: bold;
+      }
+
+      .discipline-title {
+        flex: 1;
+        margin-left: 15px;
+        font-size: 1.1em;
+      }
+
+      .toggle-icon {
+        font-size: 1.5em;
+        transition: transform 0.3s;
+      }
+
+      .discipline-card.active .toggle-icon {
+        transform: rotate(180deg);
+      }
+
+      .discipline-card.completed {
+        background: #e8f5e9;
+        border: 2px solid #4caf50;
+      }
+
+      .discipline-card.completed .discipline-header {
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+      }
+
+      .discipline-card.completed .discipline-number {
+        font-size: 1.5em;
+      }
+
+      .discipline-card.completed .discipline-number:after {
+        content: '✓';
+        position: absolute;
+        font-size: 0.8em;
+      }
+
+      .discipline-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background: #f8f9fa;
+      }
+
+      .discipline-card.active .discipline-content {
+        max-height: 3000px;
+        transition: max-height 0.3s ease-in;
+      }
+
+      .completion-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .completion-toggle input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: #4caf50;
+      }
+
+      .completion-toggle label {
+        cursor: pointer;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .discipline-body {
+        padding: 20px;
+      }
+
+      .description {
+        color: #333;
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+
+      .activities {
+        margin-top: 15px;
+        margin-bottom: 20px;
+      }
+
+      .activities h4 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 0.95em;
+      }
+
+      .activities ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .activities li {
+        color: #555;
+        padding: 5px 0 5px 20px;
+        position: relative;
+        font-size: 0.9em;
+      }
+
+      .activities li:before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #667eea;
+        font-weight: bold;
+      }
+
+      /* Text area for analysis */
+      .analysis-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #667eea;
+      }
+
+      .analysis-section h4 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 0.95em;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 120px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 0.9em;
+        resize: vertical;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+      }
+
+      /* D3 specific styles */
+      .d3-container {
+        display: grid;
+        gap: 20px;
+      }
+
+      .d3-section {
+        background: white;
+        border-left: 4px solid #667eea;
+        padding: 15px;
+        border-radius: 5px;
+      }
+
+      .d3-section h5 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 0.95em;
+      }
+
+      /* Problem Effect Grid */
+      .effect-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+      }
+
+      .effect-item {
+        background: #f0f0f0;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+
+      .effect-item label {
+        display: block;
+        font-weight: bold;
+        color: #333;
+        font-size: 0.85em;
+        margin-bottom: 5px;
+      }
+
+      .effect-item input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        font-size: 0.85em;
+      }
+
+      /* Brainstorm */
+      .brainstorm-item {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        border-left: 4px solid #764ba2;
+      }
+
+      .brainstorm-item h6 {
+        margin-bottom: 8px;
+        color: #333;
+      }
+
+      .ishikawa-category {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 0.75em;
+        margin-bottom: 8px;
+        margin-right: 5px;
+      }
+
+      .brainstorm-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.85em;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+
+      .btn-primary {
+        background-color: #667eea;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #5568d3;
+      }
+
+      .btn-secondary {
+        background-color: #e0e0e0;
+        color: #333;
+      }
+
+      .btn-secondary:hover {
+        background-color: #d0d0d0;
+      }
+
+      .btn-danger {
+        background-color: #ff6b6b;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background-color: #ff5252;
+      }
+
+      /* GUT Matrix */
+      .gut-matrix {
+        width: 100%;
+        margin-top: 15px;
+        border-collapse: collapse;
+      }
+
+      .gut-matrix th,
+      .gut-matrix td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        font-size: 0.85em;
+      }
+
+      .gut-matrix th {
+        background-color: #667eea;
+        color: white;
+      }
+
+      .gut-matrix tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      .gut-input {
+        width: 50px;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        text-align: center;
+      }
+
+      .gut-score {
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      /* Why analysis */
+      .why-analysis {
+        background: #f0f7ff;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+
+      .why-item {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .why-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .why-item label {
+        display: block;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+      }
+
+      .why-item input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        font-size: 0.85em;
+      }
+
+      /* 5W2H Styles */
+      .w2h-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .w2h-item {
+        background: #f0f0f0;
+        padding: 15px;
+        border-radius: 5px;
+        border-left: 4px solid #667eea;
+      }
+
+      .w2h-item label {
+        display: block;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 8px;
+        font-size: 0.9em;
+      }
+
+      .w2h-item input,
+      .w2h-item textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        font-size: 0.85em;
+        font-family: inherit;
+      }
+
+      .w2h-item textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+
+      .report-section {
+        margin-top: 30px;
+        padding: 20px;
+        background: #f0f7ff;
+        border-radius: 5px;
+        border: 2px solid #667eea;
+      }
+
+      .report-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+      }
+
+      .btn-success {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .btn-success:hover {
+        background-color: #45a049;
+      }
+
+      .btn-info {
+        background-color: #2196F3;
+        color: white;
+      }
+
+      .btn-info:hover {
+        background-color: #0b7dda;
+      }
+
+      .textarea-wrapper {
+        position: relative;
+      }
+
+      .btn-ai {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background-color: #ff9800;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+        font-size: 1.2em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s;
+        z-index: 10;
+      }
+
+      .btn-ai:hover {
+        background-color: #f57c00;
+      }
+
+      .btn-ai:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .ai-suggestion {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 5px;
+        padding: 12px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: 0.9em;
+      }
+
+      .ai-suggestion strong {
+        color: #ff9800;
+      }
+
+      .ai-suggestion .suggestion-text {
+        margin-top: 8px;
+        padding: 10px;
+        background: white;
+        border-radius: 3px;
+        border-left: 3px solid #ff9800;
+      }
+
+      .ai-suggestion-buttons {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .ai-suggestion-buttons button {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 0.8em;
+        font-weight: bold;
+      }
+
+      .btn-accept {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .btn-accept:hover {
+        background-color: #45a049;
+      }
+
+      .btn-reject {
+        background-color: #f44336;
+        color: white;
+      }
+
+      .btn-reject:hover {
+        background-color: #da190b;
+      }
+
+      .final-report-section {
+        display: none;
+        margin-top: 40px;
+        padding: 30px;
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      .final-report-section.visible {
+        display: block;
+        animation: slideUp 0.5s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .final-report-section h2 {
+        color: white;
+        font-size: 2em;
+        margin-bottom: 15px;
+      }
+
+      .final-report-section p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1em;
+        margin-bottom: 25px;
+      }
+
+      .final-report-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .final-report-buttons .btn {
+        padding: 15px 30px;
+        font-size: 1em;
+        background-color: white;
+        color: #4caf50;
+        font-weight: bold;
+        border: 2px solid white;
+      }
+
+      .final-report-buttons .btn:hover {
+        background-color: #4caf50;
+        color: white;
+      }
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .progress-bar-container {
+        background: #e0e0e0;
+        height: 6px;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        width: 0%;
+        transition: width 0.3s;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 30px;
+        color: white;
+        text-align: center;
+      }
+
+      .stat-item {
+        flex: 1;
+      }
+
+      .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 0.9em;
+        opacity: 0.9;
+      }
+
+      @media (max-width: 600px) {
+        header h1 {
+          font-size: 1.8em;
+        }
+
+        .discipline-title {
+          font-size: 0.95em;
+        }
+
+        .stats {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .effect-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🎯 Metodologia 8D</h1>
+        <p>Análise de Problemas em 8 Disciplinas</p>
+      </header>
+
+      <div class="disciplines-grid" id="disciplinesGrid"></div>
+
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-number" id="completedCount">0</div>
+          <div class="stat-label">Disciplinas Analisadas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">7</div>
+          <div class="stat-label">Total de Disciplinas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="progressPercent">0%</div>
+          <div class="stat-label">Progresso</div>
+        </div>
+      </div>
+
+      <div class="final-report-section" id="finalReportSection">
+        <h2>🎉 Análise Completa!</h2>
+        <p>
+          Todas as disciplinas foram finalizadas. Gere o relatório final agora.
+        </p>
+        <div class="final-report-buttons">
+          <button class="btn btn-success" onclick="generateFinalReport()">
+            📊 Gerar Relatório Completo
+          </button>
+          <button class="btn btn-info" onclick="exportToFile()">
+            💾 Exportar como PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const disciplines = [
+        {
+          number: 'D0',
+          title: 'Planejamento',
+          description:
+            'Preparação e organização da equipe para resolver o problema.',
+          activities: [
+            'Definir o escopo do problema',
+            'Formar equipe multidisciplinar',
+            'Estabelecer cronograma',
+            'Preparar recursos necessários',
+          ],
+        },
+        {
+          number: 'D1',
+          title: 'Descrever o Problema',
+          description:
+            'Documentar e compreender o problema de forma clara e objetiva.',
+          activities: [
+            'Coletar dados do problema',
+            'Descrever o que, quando e onde',
+            'Quantificar o impacto',
+            'Documentar o histórico',
+          ],
+        },
+        {
+          number: 'D2',
+          title: 'Ação Imediata (Contenção)',
+          description:
+            'Implementar ações urgentes para evitar que o problema afete mais clientes.',
+          activities: [
+            'Identificar risco imediato',
+            'Conter o problema',
+            'Comunicar stakeholders',
+            'Implementar workaround temporário',
+          ],
+        },
+        {
+          number: 'D3',
+          title: 'Identificar a Causa Raiz',
+          description:
+            'Investigar profundamente as causas fundamentais do problema.',
+          activities: [
+            'Analisar dados coletados',
+            'Usar diagrama de Ishikawa',
+            'Aplicar análise dos 5 Por quês',
+            'Validar hipóteses com dados',
+          ],
+          isD3: true,
+        },
+        {
+          number: 'D4/D5',
+          title: 'Ações Corretivas (5W2H)',
+          description:
+            'Selecionar, planejar e implementar as ações para eliminar a causa raiz.',
+          activities: [
+            'Gerar alternativas de solução',
+            'Avaliar viabilidade técnica',
+            'Analisar custo-benefício',
+            'Implementar e validar ações',
+          ],
+          isD45: true,
+        },
+        {
+          number: 'D6',
+          title: 'Prevenir Recorrência',
+          description: 'Garantir que o problema não volte a ocorrer.',
+          activities: [
+            'Atualizar procedimentos',
+            'Treinar equipe',
+            'Implementar controles',
+            'Documentar lições aprendidas',
+          ],
+        },
+        {
+          number: 'D7',
+          title: 'Reconhecer o Esforço',
+          description:
+            'Celebrar e reconhecer a contribuição da equipe no projeto.',
+          activities: [
+            'Comunicar resultados',
+            'Reconhecer contribuições',
+            'Compartilhar aprendizados',
+            'Celebrar sucesso',
+          ],
+        },
+      ];
+
+      const grid = document.getElementById('disciplinesGrid');
+      const completedCount = document.getElementById('completedCount');
+      const progressPercent = document.getElementById('progressPercent');
+
+      // Store data for each discipline
+      const analysisData = {};
+
+      disciplines.forEach((discipline, index) => {
+        const card = document.createElement('div');
+        card.className = 'discipline-card';
+
+        let contentHtml = `
+          <div class="discipline-header">
+            <div class="discipline-number">${discipline.number}</div>
+            <div class="discipline-title">${discipline.title}</div>
+            <div class="toggle-icon">▼</div>
+          </div>
+          <div class="discipline-content">
+            <div class="discipline-body">
+              <div class="description">${discipline.description}</div>
+              <div class="activities">
+                <h4>Atividades principais:</h4>
+                <ul>
+                  ${discipline.activities.map((activity) => `<li>${activity}</li>`).join('')}
+                </ul>
+              </div>
+        `;
+
+        // Add D3 specific content
+        if (discipline.isD3) {
+          contentHtml += createD3Content();
+        } else if (discipline.isD45) {
+          contentHtml += createD45Content();
+        } else {
+          // Add analysis textarea for all disciplines
+          contentHtml += `
+            <div class="analysis-section">
+              <h4>📝 Relato da Análise</h4>
+              <div class="textarea-wrapper">
+                <textarea class="analysis-text" placeholder="Registre aqui os detalhes e achados desta disciplina..." data-discipline="${discipline.number}"></textarea>
+                <button class="btn-ai" title="Sugerir com IA" onclick="suggestAIResponse(this)">💡</button>
+              </div>
+              <div class="ai-suggestion-container"></div>
+            </div>
+          `;
+        }
+
+        contentHtml += `
+              <div class="completion-toggle">
+                <input type="checkbox" class="completion-check" id="complete-${index}" data-discipline="${discipline.number}">
+                <label for="complete-${index}">Marcar como finalizado</label>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-bar-container">
+                  <div class="progress-fill" style="width: ${(index + 1) * 14.28}%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        card.innerHTML = contentHtml;
+
+        card.addEventListener('click', function (e) {
+          if (e.target.closest('.discipline-header')) {
+            card.classList.toggle('active');
+            updateStats();
+          }
+        });
+
+        const checkbox = card.querySelector('.completion-check');
+        checkbox.addEventListener('change', function () {
+          if (this.checked) {
+            card.classList.add('completed');
+          } else {
+            card.classList.remove('completed');
+          }
+          updateStats();
+        });
+
+        grid.appendChild(card);
+      });
+
+      function createD3Content() {
+        return `
+          <div class="d3-container">
+            <!-- Efeito do Problema -->
+            <div class="d3-section">
+              <h5>1️⃣ Efeito do Problema</h5>
+              <div class="effect-grid">
+                <div class="effect-item">
+                  <label>O que</label>
+                  <input type="text" class="d3-effect-what" placeholder="Descrever o quê">
+                </div>
+                <div class="effect-item">
+                  <label>Quando</label>
+                  <input type="text" class="d3-effect-when" placeholder="Data/Período">
+                </div>
+                <div class="effect-item">
+                  <label>Onde</label>
+                  <input type="text" class="d3-effect-where" placeholder="Localização">
+                </div>
+                <div class="effect-item">
+                  <label>Quanto</label>
+                  <input type="text" class="d3-effect-how-much" placeholder="Quantidade/Magnitude">
+                </div>
+              </div>
+            </div>
+
+            <!-- Brainstorm de Causas -->
+            <div class="d3-section">
+              <h5>2️⃣ Brainstorm - Possíveis Causas (Ishikawa 6M)</h5>
+              <div style="margin-bottom: 15px;">
+                <input type="text" class="d3-cause-input" placeholder="Descrever causa...">
+                <select class="d3-category-select" style="margin-left: 10px; padding: 8px; border-radius: 3px;">
+                  <option value="">Selecionar categoria...</option>
+                  <option value="Máquina">Máquina</option>
+                  <option value="Mão de obra">Mão de obra</option>
+                  <option value="Método">Método</option>
+                  <option value="Material">Material</option>
+                  <option value="Medição">Medição</option>
+                  <option value="Meio ambiente">Meio ambiente</option>
+                </select>
+                <button class="btn btn-primary" onclick="addCause(this)" style="margin-left: 10px;">+ Adicionar</button>
+              </div>
+              <div class="d3-causes-list"></div>
+            </div>
+
+            <!-- Matriz GUT -->
+            <div class="d3-section">
+              <h5>3️⃣ Matriz GUT (Priorização)</h5>
+              <p style="font-size: 0.85em; color: #666; margin-bottom: 10px;">Pontue de 1-5: 1=Baixa, 5=Alta</p>
+              <table class="gut-matrix">
+                <thead>
+                  <tr>
+                    <th>Causa</th>
+                    <th>G (Gravidade)</th>
+                    <th>U (Urgência)</th>
+                    <th>T (Tendência)</th>
+                    <th>Score</th>
+                  </tr>
+                </thead>
+                <tbody class="gut-tbody"></tbody>
+              </table>
+            </div>
+
+            <!-- Análise dos 5 Porquês -->
+            <div class="d3-section">
+              <h5>4️⃣ Análise dos 5 Porquês</h5>
+              <div class="why-analysis">
+                <div class="why-item">
+                  <label>1º Por quê?</label>
+                  <input type="text" class="why-1" placeholder="Por que ocorreu o problema?">
+                </div>
+                <div class="why-item">
+                  <label>2º Por quê?</label>
+                  <input type="text" class="why-2" placeholder="Por que da resposta anterior?">
+                </div>
+                <div class="why-item">
+                  <label>3º Por quê?</label>
+                  <input type="text" class="why-3" placeholder="Por que da resposta anterior?">
+                </div>
+                <div class="why-item">
+                  <label>4º Por quê?</label>
+                  <input type="text" class="why-4" placeholder="Por que da resposta anterior?">
+                </div>
+                <div class="why-item">
+                  <label>5º Por quê?</label>
+                  <input type="text" class="why-5" placeholder="Causa raiz identificada">
+                </div>
+              </div>
+            </div>
+
+            <!-- Resumo da Análise -->
+            <div class="d3-section">
+              <h5>📝 Resumo da Análise D3</h5>
+              <div class="textarea-wrapper">
+                <textarea class="analysis-text d3-analysis" placeholder="Registre aqui o resumo completo da análise de causa raiz..." style="min-height: 150px;" data-discipline="D3"></textarea>
+                <button class="btn-ai" title="Sugerir com IA" onclick="suggestAIResponse(this)">💡</button>
+              </div>
+              <div class="ai-suggestion-container"></div>
+            </div>
+          </div>
+        `;
+      }
+
+      function createD45Content() {
+        return `
+          <div class="d3-container">
+            <!-- 5W2H -->
+            <div class="d3-section">
+              <h5>5W2H - Plano de Ação (D4 e D5)</h5>
+              <p style="font-size: 0.85em; color: #666; margin-bottom: 15px;">O quê, Quem, Quando, Onde, Por quê, Como e Quanto custa</p>
+              <div class="w2h-grid">
+                <div class="w2h-item">
+                  <label>O QUÊ?</label>
+                  <textarea class="w2h-what" placeholder="Qual ação será executada?"></textarea>
+                </div>
+                <div class="w2h-item">
+                  <label>QUEM?</label>
+                  <input type="text" class="w2h-who" placeholder="Quem é responsável?">
+                </div>
+                <div class="w2h-item">
+                  <label>QUANDO?</label>
+                  <input type="text" class="w2h-when" placeholder="Data/Período de execução">
+                </div>
+                <div class="w2h-item">
+                  <label>ONDE?</label>
+                  <input type="text" class="w2h-where" placeholder="Local de execução">
+                </div>
+                <div class="w2h-item">
+                  <label>POR QUÊ?</label>
+                  <textarea class="w2h-why" placeholder="Por que esta ação?"></textarea>
+                </div>
+                <div class="w2h-item">
+                  <label>COMO?</label>
+                  <textarea class="w2h-how" placeholder="Como será executada?"></textarea>
+                </div>
+                <div class="w2h-item">
+                  <label>QUANTO CUSTA?</label>
+                  <input type="text" class="w2h-how-much" placeholder="Custo estimado">
+                </div>
+              </div>
+            </div>
+
+            <!-- Validação da Implementação -->
+            <div class="d3-section">
+              <h5>✓ Validação da Implementação</h5>
+              <div class="w2h-grid">
+                <div class="w2h-item" style="grid-column: 1 / -1;">
+                  <label>Resultados Obtidos</label>
+                  <div class="textarea-wrapper">
+                    <textarea class="d45-results" placeholder="Descreva os resultados após a implementação..."></textarea>
+                    <button class="btn-ai" title="Sugerir com IA" onclick="suggestAIResponse(this)">💡</button>
+                  </div>
+                  <div class="ai-suggestion-container"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Resumo da Análise -->
+            <div class="d3-section">
+              <h5>📝 Resumo do Plano de Ação (D4/D5)</h5>
+              <div class="textarea-wrapper">
+                <textarea class="analysis-text d45-analysis" placeholder="Registre aqui o resumo do plano de ação..." style="min-height: 150px;" data-discipline="D4/D5"></textarea>
+                <button class="btn-ai" title="Sugerir com IA" onclick="suggestAIResponse(this)">💡</button>
+              </div>
+              <div class="ai-suggestion-container"></div>
+            </div>
+          </div>
+        `;
+      }
+
+      window.addCause = function (button) {
+        const card = button.closest('.discipline-card');
+        const input = card.querySelector('.d3-cause-input');
+        const select = card.querySelector('.d3-category-select');
+        const causesList = card.querySelector('.d3-causes-list');
+        const gutTbody = card.querySelector('.gut-tbody');
+
+        const cause = input.value.trim();
+        const category = select.value;
+
+        if (!cause || !category) {
+          alert('Preencha a causa e selecione a categoria!');
+          return;
+        }
+
+        // Add to causes list
+        const causeId = 'cause-' + Date.now();
+        const causeItem = document.createElement('div');
+        causeItem.className = 'brainstorm-item';
+        causeItem.id = causeId;
+        causeItem.innerHTML = `
+          <h6>${cause}</h6>
+          <span class="ishikawa-category">${category}</span>
+          <div class="brainstorm-buttons">
+            <button class="btn btn-danger" onclick="removeCause('${causeId}', this)">Remover</button>
+          </div>
+        `;
+        causesList.appendChild(causeItem);
+
+        // Add to GUT matrix
+        const gutRow = document.createElement('tr');
+        gutRow.innerHTML = `
+          <td>${cause}</td>
+          <td><input type="number" class="gut-input gut-g" min="1" max="5" value="1" onchange="updateGutScore(this)"></td>
+          <td><input type="number" class="gut-input gut-u" min="1" max="5" value="1" onchange="updateGutScore(this)"></td>
+          <td><input type="number" class="gut-input gut-t" min="1" max="5" value="1" onchange="updateGutScore(this)"></td>
+          <td class="gut-score">1</td>
+        `;
+        gutTbody.appendChild(gutRow);
+
+        // Clear inputs
+        input.value = '';
+        select.value = '';
+        input.focus();
+      };
+
+      window.removeCause = function (causeId, button) {
+        const card = button.closest('.discipline-card');
+        const causeItem = document.getElementById(causeId);
+        const gutTbody = card.querySelector('.gut-tbody');
+        const causeName = causeItem.querySelector('h6').textContent;
+
+        causeItem.remove();
+
+        // Remove from GUT matrix
+        const rows = gutTbody.querySelectorAll('tr');
+        rows.forEach((row) => {
+          if (row.querySelector('td').textContent === causeName) {
+            row.remove();
+          }
+        });
+      };
+
+      window.updateGutScore = function (input) {
+        const row = input.closest('tr');
+        const g = parseInt(row.querySelector('.gut-g').value) || 0;
+        const u = parseInt(row.querySelector('.gut-u').value) || 0;
+        const t = parseInt(row.querySelector('.gut-t').value) || 0;
+        const score = g * u * t;
+        row.querySelector('.gut-score').textContent = score;
+      };
+
+      function updateStats() {
+        const completedCards = document.querySelectorAll(
+          '.discipline-card.completed',
+        ).length;
+        completedCount.textContent = completedCards;
+        const progressValue = Math.round((completedCards / 7) * 100);
+        progressPercent.textContent = progressValue + '%';
+
+        // Show final report button when 100% complete
+        const finalReportSection =
+          document.getElementById('finalReportSection');
+        if (progressValue === 100) {
+          finalReportSection.classList.add('visible');
+        } else {
+          finalReportSection.classList.remove('visible');
+        }
+      }
+
+      // AI Suggestions based on context
+      const aiSuggestions = {
+        D0: 'Equipe formada com representantes de: Produção, Engenharia, Qualidade, Operações. Cronograma definido para 15 dias. Recursos alocados: sala de reunião, ferramentas de análise, acesso a dados históricos.',
+        D1: 'Problema identificado: Aumento de 15% em defeitos no período de X a Y. Afetados: 250 unidades produzidas. Localização: Linha de montagem principal. Impacto: R$ XX.000 em custos.',
+        D2: 'Ação imediata: Segregação da produção afetada. Inspeção 100% implementada. Comunicado enviado para cliente em DD/MM. Workaround temporário: Reprocessamento manual com validação.',
+        D6: 'Procedimento atualizado em DD/MM/AAAA. Treinamento realizado com 25 funcionários. Controle visual implementado na linha. Documentação revisada no wiki interno.',
+        D7: 'Reconhecimento formal para equipe de análise em reunião com diretoria. Apresentação de resultados para stakeholders. Lições aprendidas compartilhadas em base de conhecimento.',
+      };
+
+      window.suggestAIResponse = async function (button) {
+        const textarea = button
+          .closest('.textarea-wrapper')
+          .querySelector('textarea');
+        const container = button
+          .closest('.textarea-wrapper')
+          .parentElement.querySelector('.ai-suggestion-container');
+        const disciplineNumber =
+          textarea.getAttribute('data-discipline') || 'D0';
+
+        button.disabled = true;
+        button.textContent = '⏳';
+
+        try {
+          let suggestion = '';
+
+          // Try to get AI suggestion from context or template
+          if (aiSuggestions[disciplineNumber]) {
+            suggestion = aiSuggestions[disciplineNumber];
+          } else {
+            // Generic suggestion based on context
+            suggestion = await generateAISuggestion(disciplineNumber, textarea);
+          }
+
+          // Display suggestion
+          container.innerHTML = `
+            <div class="ai-suggestion">
+              <strong>💡 Sugestão de IA:</strong>
+              <div class="suggestion-text">${suggestion}</div>
+              <div class="ai-suggestion-buttons">
+                <button class="btn-accept" onclick="acceptSuggestion(this, '${suggestion.replace(/'/g, "\\'")}')">✓ Aceitar</button>
+                <button class="btn-reject" onclick="rejectSuggestion(this)">✗ Rejeitar</button>
+              </div>
+            </div>
+          `;
+        } catch (error) {
+          container.innerHTML = `
+            <div class="ai-suggestion">
+              <strong>⚠️ Erro:</strong>
+              <div class="suggestion-text">Não foi possível gerar sugestão. Verifique a conexão.</div>
+            </div>
+          `;
+        }
+
+        button.disabled = false;
+        button.textContent = '💡';
+      };
+
+      window.generateAISuggestion = async function (discipline, textarea) {
+        // Context-aware suggestions
+        const contexts = {
+          'why-1': 'Qual foi o fator primário que causou o problema?',
+          'why-2': 'Por que o fator primário ocorreu?',
+          'why-3': 'Por que não foi detectado antes?',
+          'why-4': 'Por que o controle falhou?',
+          'why-5': 'Qual é a causa raiz fundamental?',
+          'w2h-what':
+            'Descrever a ação específica que será tomada para corrigir a causa raiz.',
+          'w2h-who': 'Identificar o responsável pela execução da ação.',
+          'w2h-when': 'Definir data ou período para conclusão.',
+          'w2h-where': 'Especificar o local ou departamento afetado.',
+          'w2h-why': 'Explicar por que esta ação resolverá o problema.',
+          'w2h-how': 'Detalhar o método e procedimento de implementação.',
+          'w2h-how-much': 'Estimar custo de mão de obra, material e overhead.',
+        };
+
+        return (
+          contexts[textarea.className] ||
+          'Complete este campo com informações detalhadas baseadas na análise anterior.'
+        );
+      };
+
+      window.acceptSuggestion = function (button, suggestion) {
+        const wrapper = button.closest('.textarea-wrapper');
+        if (!wrapper) {
+          const container = button.closest('.ai-suggestion');
+          const textarea =
+            container.closest('.w2h-item')?.querySelector('textarea') ||
+            container.closest('.d3-section')?.querySelector('textarea');
+          if (textarea) textarea.value = suggestion;
+        } else {
+          wrapper.querySelector('textarea').value = suggestion;
+        }
+        button.closest('.ai-suggestion').remove();
+      };
+
+      window.rejectSuggestion = function (button) {
+        button.closest('.ai-suggestion').remove();
+      };
+
+      window.generateFinalReport = function () {
+        const cards = document.querySelectorAll('.discipline-card.completed');
+        let fullReport = `
+╔════════════════════════════════════════════════════════════════════════════╗
+║                     RELATÓRIO FINAL - ANÁLISE 8D                           ║
+║                                                                             ║
+║  Data de Geração: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}              ║
+║  Status: ANÁLISE COMPLETA ✓                                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+`;
+
+        cards.forEach((card) => {
+          const disciplineNumber =
+            card.querySelector('.discipline-number').textContent;
+          const title = card.querySelector('.discipline-title').textContent;
+
+          fullReport += `
+${'═'.repeat(80)}
+${disciplineNumber} - ${title}
+${'═'.repeat(80)}
+
+`;
+
+          const d3Section = card.querySelector('.d3-effect-what');
+          if (d3Section) {
+            fullReport += `EFEITO DO PROBLEMA:
+  O quê: ${card.querySelector('.d3-effect-what')?.value || 'N/A'}
+  Quando: ${card.querySelector('.d3-effect-when')?.value || 'N/A'}
+  Onde: ${card.querySelector('.d3-effect-where')?.value || 'N/A'}
+  Quanto: ${card.querySelector('.d3-effect-how-much')?.value || 'N/A'}
+
+ANÁLISE DOS 5 PORQUÊS:
+  1º: ${card.querySelector('.why-1')?.value || 'N/A'}
+  2º: ${card.querySelector('.why-2')?.value || 'N/A'}
+  3º: ${card.querySelector('.why-3')?.value || 'N/A'}
+  4º: ${card.querySelector('.why-4')?.value || 'N/A'}
+  5º: ${card.querySelector('.why-5')?.value || 'N/A'}
+
+RESUMO D3:
+${card.querySelector('.d3-analysis')?.value || 'N/A'}
+
+`;
+          }
+
+          const w2hSection = card.querySelector('.w2h-what');
+          if (w2hSection) {
+            fullReport += `PLANO DE AÇÃO (5W2H):
+  O Quê: ${card.querySelector('.w2h-what')?.value || 'N/A'}
+  Quem: ${card.querySelector('.w2h-who')?.value || 'N/A'}
+  Quando: ${card.querySelector('.w2h-when')?.value || 'N/A'}
+  Onde: ${card.querySelector('.w2h-where')?.value || 'N/A'}
+  Por quê: ${card.querySelector('.w2h-why')?.value || 'N/A'}
+  Como: ${card.querySelector('.w2h-how')?.value || 'N/A'}
+  Quanto custa: ${card.querySelector('.w2h-how-much')?.value || 'N/A'}
+
+RESULTADOS:
+${card.querySelector('.d45-results')?.value || 'N/A'}
+
+RESUMO D4/D5:
+${card.querySelector('.d45-analysis')?.value || 'N/A'}
+
+`;
+          }
+
+          const analysisText = card.querySelector(
+            '.analysis-text:not(.d3-analysis):not(.d45-analysis)',
+          );
+          if (analysisText?.value) {
+            fullReport += `ANÁLISE:
+${analysisText.value}
+
+`;
+          }
+        });
+
+        fullReport += `
+${'═'.repeat(80)}
+FIM DO RELATÓRIO
+Data: ${new Date().toLocaleDateString('pt-BR')}
+${'═'.repeat(80)}
+`;
+
+        navigator.clipboard
+          .writeText(fullReport)
+          .then(() => {
+            alert('✓ Relatório completo copiado para a área de transferência!');
+          })
+          .catch(() => {
+            alert('⚠️ Não foi possível copiar. Tente novamente.');
+          });
+      };
+
+      window.exportToFile = function () {
+        const cards = document.querySelectorAll('.discipline-card.completed');
+        let pdfContent = `Relatório 8D - ${new Date().toLocaleDateString('pt-BR')}\n\n`;
+
+        cards.forEach((card) => {
+          pdfContent +=
+            card.querySelector('.discipline-title').textContent + '\n';
+          const textarea = card.querySelector('.analysis-text');
+          if (textarea) pdfContent += textarea.value + '\n\n';
+        });
+
+        const blob = new Blob([pdfContent], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Analise_8D_${new Date().toISOString().split('T')[0]}.txt`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      };
+    </script>
+  </body>
+</html>
