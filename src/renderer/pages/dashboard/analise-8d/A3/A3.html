@@ -3,49 +3,1026 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Metodologia 8D</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>Formulário A3 - Projeto de Melhorias</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 14px;
+        line-height: 1.4;
+        background: #f5f5f5;
+        padding: 15px;
+      }
+
+      .a3-page {
+        width: 420mm;
+        height: 297mm;
+        background: white;
+        margin: 15px auto;
+        padding: 18px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+      }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+        color: white;
+        padding: 10px 14px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+        position: relative;
+      }
+
+      .pdf-button {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .pdf-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+      }
+
+      header h1 {
+        font-size: 30px;
+        font-weight: bold;
+        text-align: left;
+        flex: 1 1 100%;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+      }
+
+      .header-fields {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: 12px;
+        width: 100%;
+      }
+
+      .header-field {
+        display: flex;
+        flex-direction: column;
+        background: rgba(255, 255, 255, 0.12);
+        padding: 6px 10px;
+        border-radius: 4px;
+        backdrop-filter: blur(10px);
+        min-width: 130px;
+      }
+
+      .header-field label {
+        font-weight: bold;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.95);
+        margin-bottom: 4px;
+      }
+
+      .header-field input,
+      .header-field select {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 6px 8px;
+        font-size: 12px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 4px;
+        color: #333;
+        font-family: 'Segoe UI', sans-serif;
+      }
+
+      .header-field .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .header-field .checkbox-group label {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        color: #333;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 4px 6px;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+
+      .header-field .checkbox-group input {
+        width: auto;
+        margin: 0;
+      }
+
+      .content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .content-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+      }
+
+      .content-row-2col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .section {
+        border: 2.5px solid #d32f2f;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        background: #f9f9f9;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(211, 47, 47, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .section:hover {
+        box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25);
+      }
+
+      .section-title {
+        font-weight: bold;
+        background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+        color: white;
+        padding: 7px 9px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+      }
+
+      .section-content {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      textarea {
+        flex: 1;
+        border: 1px solid #ddd;
+        padding: 6px;
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 12px;
+        resize: none;
+        border-radius: 4px;
+        background: white;
+        color: #333;
+        transition: border-color 0.3s;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: #d32f2f;
+        box-shadow: 0 0 5px rgba(211, 47, 47, 0.3);
+      }
+
+      .image-placeholder {
+        flex: 0 0 auto;
+        border: 2px dashed #d32f2f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-style: italic;
+        background: #f0f0f0;
+        border-radius: 4px;
+        margin: 4px 0;
+        height: 35px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: auto;
+        flex-direction: column;
+      }
+
+      .image-placeholder:hover {
+        background: #e8e8e8;
+        border-color: #b71c1c;
+      }
+
+      .image-placeholder input[type='file'] {
+        display: none;
+      }
+
+      .image-placeholder-text {
+        pointer-events: none;
+      }
+
+      .image-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 6px;
+        margin-top: 6px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      .image-item {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        overflow: hidden;
+        background: white;
+      }
+
+      .image-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .image-item .remove-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #d32f2f;
+        color: white;
+        border: none;
+        width: 18px;
+        height: 18px;
+        font-size: 12px;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+      }
+
+      .image-item:hover .remove-btn {
+        display: flex;
+      }
+
+      .image-comment-btn {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background: #2196f3;
+        color: white;
+        border: none;
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+      }
+
+      .image-item:hover .image-comment-btn {
+        display: flex;
+      }
+
+      .image-comment-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .comment-modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 400px;
+        max-width: 90%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .comment-modal-content h3 {
+        margin: 0 0 15px 0;
+        color: #d32f2f;
+        font-size: 14px;
+      }
+
+      .comment-modal-content textarea {
+        width: 100%;
+        height: 100px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px;
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 12px;
+        resize: vertical;
+      }
+
+      .comment-modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .comment-modal-buttons button {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+      }
+
+      .comment-modal-buttons .save-btn {
+        background: #d32f2f;
+        color: white;
+      }
+
+      .comment-modal-buttons .cancel-btn {
+        background: #666;
+        color: white;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 10px;
+        margin-bottom: 4px;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 5px;
+        text-align: left;
+      }
+
+      table th {
+        background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+        color: white;
+        font-weight: bold;
+        font-size: 11px;
+      }
+
+      table td {
+        font-size: 11px;
+        background: white;
+      }
+
+      table tr:nth-child(even) td {
+        background: #f9f9f9;
+      }
+
+      .input-field {
+        display: flex;
+        margin-bottom: 4px;
+        font-size: 10px;
+        align-items: center;
+      }
+
+      .input-field label {
+        font-weight: bold;
+        width: 70px;
+        flex-shrink: 0;
+        color: #333;
+      }
+
+      .input-field input {
+        flex: 1;
+        border: 1px solid #ddd;
+        padding: 4px 6px;
+        font-size: 10px;
+        border-radius: 3px;
+        background: white;
+        font-family: 'Segoe UI', sans-serif;
+      }
+
+      .input-field input:focus {
+        outline: none;
+        border-color: #d32f2f;
+        box-shadow: 0 0 4px rgba(211, 47, 47, 0.2);
+      }
+
+      .add-row-button {
+        background: #d32f2f;
+        color: white;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 8px;
+        transition: background-color 0.3s ease;
+      }
+
+      .add-row-button:hover {
+        background: #b71c1c;
+      }
+
+      /* Print styles */
+      @media print {
+        body {
+          background: white;
+          padding: 0;
+        }
+        .a3-page {
+          box-shadow: none;
+          margin: 0;
+          width: 100%;
+          height: auto;
+          border-radius: 0;
+        }
+        header {
+          box-shadow: none;
+          border-radius: 0;
+        }
+        .section {
+          box-shadow: none;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div class="container">
+    <div class="a3-page">
+      <!-- CABEÇALHO -->
       <header>
-        <h1>🎯 A3</h1>
-        <p>Análise de Problemas em 8 Disciplinas</p>
+        <button class="pdf-button" onclick="generatePDF()">📄 Gerar PDF</button>
+        <h1>A3</h1>
+        <div class="header-fields">
+          <div class="header-field" style="flex: 1 1 260px; min-width: 260px">
+            <label>Oportunidade:</label>
+            <input type="text" placeholder="Nome do Projeto" />
+          </div>
+          <div class="header-field" style="flex: 1 1 180px; min-width: 180px">
+            <label>Impacto:</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" /> Custo</label>
+              <label><input type="checkbox" /> Qualidade</label>
+              <label><input type="checkbox" /> Meio Ambiente</label>
+              <label><input type="checkbox" /> Segurança</label>
+            </div>
+          </div>
+          <div class="header-field" style="flex: 1 1 240px; min-width: 220px">
+            <label>Time Envolvido:</label>
+            <input type="text" placeholder="Nome do time" />
+          </div>
+          <div class="header-field" style="flex: 1 1 140px; min-width: 140px">
+            <label>Data Elaboração:</label>
+            <input type="date" />
+          </div>
+          <div class="header-field" style="flex: 1 1 140px; min-width: 140px">
+            <label>Setor:</label>
+            <input type="text" placeholder="Digite o Setor" />
+          </div>
+        </div>
       </header>
 
-      <div class="disciplines-grid" id="disciplinesGrid"></div>
+      <!-- CONTEÚDO PRINCIPAL -->
+      <div class="content">
+        <div class="content-row">
+          <!-- SEÇÃO 1: CONTEXTUALIZAÇÃO -->
+          <div class="section">
+            <div class="section-title">1° Contextualização</div>
+            <div class="section-content">
+              <textarea
+                placeholder="Descreva a situação atual do problema/processo..."
+                style="min-height: 150px; font-size: 12px"
+              ></textarea>
+            </div>
+          </div>
 
-      <div class="stats">
-        <div class="stat-item">
-          <div class="stat-number" id="completedCount">0</div>
-          <div class="stat-label">Disciplinas Analisadas</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">7</div>
-          <div class="stat-label">Total de Disciplinas</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number" id="progressPercent">0%</div>
-          <div class="stat-label">Progresso</div>
-        </div>
-      </div>
+          <!-- SEÇÃO 2: OBJETIVOS / METAS / BENEFÍCIOS -->
+          <div class="section">
+            <div class="section-title">2° Objetivos / Metas / Benefícios</div>
+            <div class="section-content" style="gap: 6px">
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <label
+                  style="font-weight: bold; font-size: 10px; color: #d32f2f"
+                  >Objetivos</label
+                >
+                <textarea
+                  placeholder="Descrever os objetivos..."
+                  style="flex: 1; font-size: 12px; min-height: 80px"
+                ></textarea>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <label
+                  style="font-weight: bold; font-size: 10px; color: #d32f2f"
+                  >Metas</label
+                >
+                <textarea
+                  placeholder="Descrever as metas..."
+                  style="flex: 1; font-size: 12px; min-height: 80px"
+                ></textarea>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <label
+                  style="font-weight: bold; font-size: 10px; color: #d32f2f"
+                  >Benefícios</label
+                >
+                <textarea
+                  placeholder="Descrever os benefícios..."
+                  style="flex: 1; font-size: 12px; min-height: 80px"
+                ></textarea>
+              </div>
+            </div>
+          </div>
 
-      <div class="final-report-section" id="finalReportSection">
-        <h2>🎉 Análise Completa!</h2>
-        <p>
-          Todas as disciplinas foram finalizadas. Gere o relatório final agora.
-        </p>
-        <div class="final-report-buttons">
-          <button class="btn btn-success" onclick="generateFinalReport()">
-            📊 Gerar Relatório Completo
-          </button>
-          <button class="btn btn-info" onclick="exportToFile()">
-            💾 Exportar como PDF
-          </button>
+          <!-- SEÇÃO 3: ESTADO ATUAL -->
+          <div class="section">
+            <div class="section-title">3° Estado Atual</div>
+            <div class="section-content">
+              <div
+                class="image-placeholder"
+                onclick="document.getElementById('currentImageInput').click()"
+                style="height: 35px"
+              >
+                <span class="image-placeholder-text"
+                  >Clique para adicionar imagem</span
+                >
+                <input
+                  type="file"
+                  id="currentImageInput"
+                  accept="image/*"
+                  multiple
+                  onchange="handleCurrentImages(event)"
+                />
+              </div>
+              <div
+                class="image-gallery"
+                id="currentImageGallery"
+                style="max-height: 250px"
+              ></div>
+              <textarea
+                placeholder="Descreva detalhadamente o estado atual do problema/processo..."
+                style="min-height: 120px"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-row">
+          <!-- SEÇÃO 4: ANÁLISE DA CAUSA -->
+          <div class="section">
+            <div class="section-title">4° Análise da Causa</div>
+            <div class="section-content">
+              <div
+                class="image-placeholder"
+                onclick="document.getElementById('causeImageInput').click()"
+                style="height: 35px"
+              >
+                <span class="image-placeholder-text"
+                  >Clique para adicionar imagem</span
+                >
+                <input
+                  type="file"
+                  id="causeImageInput"
+                  accept="image/*"
+                  multiple
+                  onchange="handleCauseImages(event)"
+                />
+              </div>
+              <div
+                class="image-gallery"
+                id="causeImageGallery"
+                style="max-height: 250px"
+              ></div>
+              <textarea
+                placeholder="Descreva detalhadamente a análise da causa raiz do problema..."
+                style="min-height: 120px"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: PLANO DE AÇÃO -->
+          <div class="section">
+            <div class="section-title">5° Plano de Ação</div>
+            <div class="section-content">
+              <table style="font-size: 11px">
+                <tr>
+                  <th>Ação</th>
+                  <th>Responsável</th>
+                  <th>Prazo</th>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="text"
+                      style="width: 100%; border: none; background: transparent"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      style="width: 100%; border: none; background: transparent"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="date"
+                      style="
+                        width: 100%;
+                        border: none;
+                        background: transparent;
+                        font-size: 10px;
+                      "
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="text"
+                      style="width: 100%; border: none; background: transparent"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      style="width: 100%; border: none; background: transparent"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="date"
+                      style="
+                        width: 100%;
+                        border: none;
+                        background: transparent;
+                        font-size: 10px;
+                      "
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="text"
+                      style="width: 100%; border: none; background: transparent"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      style="width: 100%; border: none; background: transparent"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="date"
+                      style="
+                        width: 100%;
+                        border: none;
+                        background: transparent;
+                        font-size: 10px;
+                      "
+                    />
+                  </td>
+                </tr>
+              </table>
+              <button class="add-row-button" onclick="addActionRow()">
+                + Adicionar Ação
+              </button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: ESTADO FUTURO / RESULTADO -->
+          <div class="section">
+            <div class="section-title">6° Estado Futuro / Resultado</div>
+            <div
+              class="section-content"
+              style="flex-direction: column; gap: 10px"
+            >
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <label
+                  style="font-weight: bold; font-size: 11px; color: #d32f2f"
+                  >Antes:</label
+                >
+                <textarea
+                  placeholder="Descrever o estado antes das melhorias..."
+                  style="flex: 1; font-size: 12px; min-height: 100px"
+                ></textarea>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <label
+                  style="font-weight: bold; font-size: 11px; color: #d32f2f"
+                  >Depois:</label
+                >
+                <textarea
+                  placeholder="Descrever o estado após as melhorias..."
+                  style="flex: 1; font-size: 12px; min-height: 100px"
+                ></textarea>
+              </div>
+              <div
+                class="image-placeholder"
+                onclick="document.getElementById('futureImageInput').click()"
+                style="height: 35px"
+              >
+                <span class="image-placeholder-text"
+                  >Clique para adicionar imagem</span
+                >
+                <input
+                  type="file"
+                  id="futureImageInput"
+                  accept="image/*"
+                  multiple
+                  onchange="handleFutureImages(event)"
+                />
+              </div>
+              <div
+                class="image-gallery"
+                id="futureImageGallery"
+                style="max-height: 200px"
+              ></div>
+              <textarea
+                placeholder="Descrição dos resultados esperados..."
+                style="
+                  flex: 1;
+                  margin-top: 6px;
+                  min-height: 120px;
+                  font-size: 12px;
+                "
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="section col-full">
+          <div class="section-title">7° Conclusão / Padronização</div>
+          <div class="section-content" style="flex-direction: row; gap: 10px">
+            <div style="flex: 1; display: flex; flex-direction: column">
+              <div
+                class="image-placeholder"
+                onclick="document.getElementById('standardImageInput').click()"
+                style="height: 35px"
+              >
+                <span class="image-placeholder-text"
+                  >Clique para adicionar imagem</span
+                >
+                <input
+                  type="file"
+                  id="standardImageInput"
+                  accept="image/*"
+                  multiple
+                  onchange="handleStandardImages(event)"
+                />
+              </div>
+              <div
+                class="image-gallery"
+                id="standardImageGallery"
+                style="max-height: 200px"
+              ></div>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column">
+              <textarea
+                placeholder="Descrição da padronização e conclusões..."
+                style="min-height: 200px; font-size: 12px"
+              ></textarea>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Modal para comentários das imagens -->
+    <div class="image-comment-modal" id="imageCommentModal">
+      <div class="comment-modal-content">
+        <h3>Comentário da Imagem</h3>
+        <textarea
+          id="imageCommentText"
+          placeholder="Digite seu comentário sobre esta imagem..."
+        ></textarea>
+        <div class="comment-modal-buttons">
+          <button class="cancel-btn" onclick="closeCommentModal()">
+            Cancelar
+          </button>
+          <button class="save-btn" onclick="saveImageComment()">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Gerenciador de imagens para cada seção
+      const imageManagers = {
+        cause: {
+          input: 'causeImageInput',
+          gallery: 'causeImageGallery',
+          images: [],
+        },
+        current: {
+          input: 'currentImageInput',
+          gallery: 'currentImageGallery',
+          images: [],
+        },
+        future: {
+          input: 'futureImageInput',
+          gallery: 'futureImageGallery',
+          images: [],
+        },
+        standard: {
+          input: 'standardImageInput',
+          gallery: 'standardImageGallery',
+          images: [],
+        },
+      };
+
+      let currentCommentImage = null;
+      let currentCommentManager = null;
+
+      function handleImages(event, manager) {
+        const files = Array.from(event.target.files);
+        files.forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = { src: e.target.result, name: file.name, comment: '' };
+            manager.images.push(img);
+            renderGallery(manager);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function renderGallery(manager) {
+        const gallery = document.getElementById(manager.gallery);
+        gallery.innerHTML = manager.images
+          .map(
+            (img, idx) => `
+          <div class="image-item">
+            <img src="${img.src}" alt="${img.name}" title="${img.name}${img.comment ? '\n\nComentário: ' + img.comment : ''}">
+            <button class="remove-btn" onclick="removeImage('${manager.gallery}', ${idx})">×</button>
+            <button class="image-comment-btn" onclick="openCommentModal('${manager.gallery}', ${idx})">💬</button>
+          </div>
+        `,
+          )
+          .join('');
+      }
+
+      function removeImage(galleryId, index) {
+        const managerKey = Object.keys(imageManagers).find(
+          (key) => imageManagers[key].gallery === galleryId,
+        );
+        if (managerKey) {
+          imageManagers[managerKey].images.splice(index, 1);
+          renderGallery(imageManagers[managerKey]);
+        }
+      }
+
+      function openCommentModal(galleryId, imageIndex) {
+        const managerKey = Object.keys(imageManagers).find(
+          (key) => imageManagers[key].gallery === galleryId,
+        );
+        if (managerKey) {
+          currentCommentManager = imageManagers[managerKey];
+          currentCommentImage = imageIndex;
+          const image = currentCommentManager.images[imageIndex];
+          document.getElementById('imageCommentText').value =
+            image.comment || '';
+          document.getElementById('imageCommentModal').style.display = 'flex';
+        }
+      }
+
+      function closeCommentModal() {
+        document.getElementById('imageCommentModal').style.display = 'none';
+        currentCommentImage = null;
+        currentCommentManager = null;
+        document.getElementById('imageCommentText').value = '';
+      }
+
+      function saveImageComment() {
+        if (currentCommentManager && currentCommentImage !== null) {
+          const comment = document.getElementById('imageCommentText').value;
+          currentCommentManager.images[currentCommentImage].comment = comment;
+          renderGallery(currentCommentManager);
+          closeCommentModal();
+        }
+      }
+
+      function handleCauseImages(event) {
+        handleImages(event, imageManagers.cause);
+      }
+
+      function handleCurrentImages(event) {
+        handleImages(event, imageManagers.current);
+      }
+
+      function handleFutureImages(event) {
+        handleImages(event, imageManagers.future);
+      }
+
+      function handleStandardImages(event) {
+        handleImages(event, imageManagers.standard);
+      }
+
+      // Fechar modal ao clicar fora
+      document
+        .getElementById('imageCommentModal')
+        .addEventListener('click', function (e) {
+          if (e.target === this) {
+            closeCommentModal();
+          }
+        });
+
+      // Função para gerar PDF
+      function generatePDF() {
+        const element = document.querySelector('.a3-page');
+        const opt = {
+          margin: 0.5,
+          filename: 'formulario-a3.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'in', format: 'a3', orientation: 'landscape' },
+        };
+
+        // Ocultar o botão de PDF temporariamente durante a geração
+        const pdfButton = document.querySelector('.pdf-button');
+        pdfButton.style.display = 'none';
+
+        html2pdf()
+          .set(opt)
+          .from(element)
+          .save()
+          .then(() => {
+            // Mostrar o botão novamente após gerar o PDF
+            pdfButton.style.display = 'block';
+          });
+      }
+
+      // Função para adicionar linha na tabela do plano de ação
+      function addActionRow() {
+        // Encontrar a tabela do plano de ação
+        const sections = document.querySelectorAll('.section');
+        let actionTable = null;
+
+        sections.forEach((section) => {
+          const title = section.querySelector('.section-title');
+          if (title && title.textContent.includes('5° Plano de Ação')) {
+            actionTable = section.querySelector('table');
+          }
+        });
+
+        if (actionTable) {
+          const newRow = document.createElement('tr');
+
+          newRow.innerHTML = `
+            <td>
+              <input
+                type="text"
+                style="width: 100%; border: none; background: transparent"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                style="width: 100%; border: none; background: transparent"
+              />
+            </td>
+            <td>
+              <input
+                type="date"
+                style="
+                  width: 100%;
+                  border: none;
+                  background: transparent;
+                  font-size: 10px;
+                "
+              />
+            </td>
+          `;
+
+          // Inserir a nova linha antes do botão de adicionar
+          const addButton =
+            actionTable.parentNode.querySelector('.add-row-button');
+          actionTable.insertBefore(newRow, addButton);
+        }
+      }
+    </script>
   </body>
 </html>
