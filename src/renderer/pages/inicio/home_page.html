@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - causA3</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        background: #f4f6fb;
+        color: #2d3347;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 32px;
+        display: flex;
+        justify-content: center;
+        background: linear-gradient(
+          135deg,
+          #fafbff 0%,
+          #f3f5ff 50%,
+          #fff0f1 100%
+        );
+      }
+      .page {
+        width: min(1200px, 100%);
+      }
+      header {
+        margin-bottom: 32px;
+      }
+      .title-section {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 8px;
+      }
+      .title-section h1 {
+        margin: 0;
+        font-size: clamp(2rem, 2.4vw, 2.8rem);
+        letter-spacing: -0.03em;
+      }
+      .title-section p {
+        margin: 8px 0 0;
+        max-width: 650px;
+        line-height: 1.7;
+        color: #57606a;
+        font-size: 1rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+      .card {
+        position: relative;
+        background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%);
+        border-radius: 30px;
+        padding: 32px;
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid rgba(209, 63, 63, 0.08);
+        box-shadow: 0 24px 60px rgba(209, 63, 63, 0.06);
+        overflow: hidden;
+        transition:
+          transform 220ms ease,
+          box-shadow 220ms ease,
+          border-color 220ms ease;
+      }
+      .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          #c92d2d 0%,
+          #d13f3f 50%,
+          #e63946 100%
+        );
+      }
+      .card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(209, 63, 63, 0.2);
+        box-shadow: 0 32px 80px rgba(209, 63, 63, 0.12);
+      }
+      .card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 22px;
+        position: relative;
+        z-index: 1;
+      }
+      .card-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+          135deg,
+          rgba(209, 63, 63, 0.1) 0%,
+          rgba(230, 57, 70, 0.08) 100%
+        );
+        font-size: 1.6rem;
+        margin-right: 14px;
+        flex-shrink: 0;
+      }
+      .card-title {
+        font-size: 1.3rem;
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 13px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: #ffffff;
+        background: linear-gradient(135deg, #d13f3f 0%, #c92d2d 100%);
+        box-shadow: 0 8px 16px rgba(209, 63, 63, 0.18);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .description {
+        margin: 0;
+        line-height: 1.85;
+        color: #4b5665;
+        flex: 1;
+        font-size: 1rem;
+      }
+      .card-footer {
+        margin-top: 24px;
+        display: flex;
+        justify-content: flex-start;
+        position: relative;
+        z-index: 1;
+      }
+      .card a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 13px 22px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #d13f3f 0%, #c92d2d 100%);
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 200ms ease;
+        box-shadow: 0 8px 16px rgba(209, 63, 63, 0.2);
+      }
+      .card a:hover {
+        background: linear-gradient(135deg, #c92d2d 0%, #b23030 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(209, 63, 63, 0.28);
+      }
+      .card-note {
+        margin-top: 16px;
+        font-size: 0.92rem;
+        color: #8b96a7;
+      }
+      @media (max-width: 860px) {
+        body {
+          padding: 24px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div class="title-section">
+          <div>
+            <h1>Bem-vindo ao causA3</h1>
+            <p>
+              Escolha a ferramenta desejada para começar a analisar problemas,
+              estruturar melhorias e acompanhar a evolução do 8D e do A3.
+            </p>
+          </div>
+        </div>
+      </header>
+      <section class="grid">
+        <article class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-icon">📌</span>
+              <div>
+                <h2 class="card-title">8D</h2>
+                <span class="badge">Qualidade</span>
+              </div>
+            </div>
+            <p class="description">
+              A metodologia 8D ajuda a identificar a origem de um problema,
+              definir ações corretivas e garantir que a causa raiz seja
+              eliminada.
+            </p>
+          </div>
+          <div class="card-footer">
+            <a href="../dashboard/analise-8d/A3/analise-8d/8d.html">Abrir 8D</a>
+          </div>
+        </article>
+        <article class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-icon">📝</span>
+              <div>
+                <h2 class="card-title">A3</h2>
+                <span class="badge">Melhoria</span>
+              </div>
+            </div>
+            <p class="description">
+              O A3 organiza o problema, metas e ações em uma só folha,
+              promovendo clareza e alinhamento na solução.
+            </p>
+          </div>
+          <div class="card-footer">
+            <a href="../dashboard/analise-8d/A3/A3/A3.html">Abrir A3</a>
+          </div>
+        </article>
+        <article class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-icon">🧭</span>
+              <div>
+                <h2 class="card-title">SIPOC estruturado</h2>
+                <span class="badge">Processo</span>
+              </div>
+            </div>
+            <p class="description">
+              SIPOC mapeia fornecedores, entradas, processo, saídas e clientes
+              para estruturar a visão completa do fluxo de trabalho.
+            </p>
+          </div>
+          <div class="card-footer">
+            <a href="../dashboard/sipoc.html">Abrir SIPOC</a>
+          </div>
+        </article>
+        <article class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-icon">📊</span>
+              <div>
+                <h2 class="card-title">Dashboard</h2>
+                <span class="badge">Evolução</span>
+              </div>
+            </div>
+            <p class="description">
+              Visão geral da evolução dos projetos 8D e A3, com status,
+              progresso e resultados em um único painel.
+            </p>
+          </div>
+          <div class="card-footer">
+            <a href="../dashboard/dashboard.html">Abrir Dashboard</a>
+          </div>
+        </article>
+      </section>
+    </div>
+  </body>
+</html>

@@ -13,7 +13,12 @@
 
       body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(
+          135deg,
+          #fafbff 0%,
+          #f3f5ff 50%,
+          #fff0f1 100%
+        );
         min-height: 100vh;
         padding: 20px;
       }
@@ -21,23 +26,107 @@
       .container {
         max-width: 1200px;
         margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 24px;
+      }
+
+      .main-content {
+        grid-column: 1;
+      }
+
+      .sidebar-menu {
+        grid-column: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+      }
+
+      .menu-card {
+        background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%);
+        border: 1px solid rgba(209, 63, 63, 0.08);
+        border-radius: 18px;
+        padding: 16px;
+        text-align: center;
+        transition: all 220ms ease;
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .menu-card:hover {
+        border-color: rgba(209, 63, 63, 0.2);
+        box-shadow: 0 12px 28px rgba(209, 63, 63, 0.12);
+        transform: translateY(-3px);
+      }
+
+      .menu-card-icon {
+        font-size: 1.8em;
+      }
+
+      .menu-card-title {
+        font-weight: 700;
+        font-size: 0.85em;
+        color: #1a1a1a;
+      }
+
+      .menu-card-badge {
+        display: inline-block;
+        background: #d13f3f;
+        color: white;
+        font-size: 0.65em;
+        font-weight: 700;
+        padding: 3px 6px;
+        border-radius: 999px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
       header {
         text-align: center;
-        color: white;
+        color: #1a1a1a;
         margin-bottom: 40px;
+        position: relative;
+      }
+
+      header .back-home {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 10px 16px;
+        background: linear-gradient(135deg, #d13f3f 0%, #c92d2d 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.9em;
+        transition: all 200ms ease;
+        box-shadow: 0 8px 16px rgba(209, 63, 63, 0.2);
+      }
+
+      header .back-home:hover {
+        background: linear-gradient(135deg, #c92d2d 0%, #b23030 100%);
+        transform: translateY(-50%) translateY(-2px);
+        box-shadow: 0 12px 24px rgba(209, 63, 63, 0.28);
       }
 
       header h1 {
         font-size: 2.5em;
         margin-bottom: 10px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        text-shadow: none;
       }
 
       header p {
         font-size: 1.1em;
-        opacity: 0.9;
+        opacity: 0.8;
       }
 
       .disciplines-grid {
@@ -62,7 +151,7 @@
       }
 
       .discipline-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #d13f3f 0%, #c92d2d 100%);
         color: white;
         padding: 20px;
         display: flex;
@@ -149,7 +238,7 @@
       .completion-toggle label {
         cursor: pointer;
         font-weight: bold;
-        color: #667eea;
+        color: #d13f3f;
       }
 
       .discipline-body {
@@ -168,7 +257,7 @@
       }
 
       .activities h4 {
-        color: #667eea;
+        color: #d13f3f;
         margin-bottom: 10px;
         font-size: 0.95em;
       }
@@ -189,7 +278,7 @@
         content: '✓';
         position: absolute;
         left: 0;
-        color: #667eea;
+        color: #d13f3f;
         font-weight: bold;
       }
 
@@ -197,11 +286,11 @@
       .analysis-section {
         margin-top: 20px;
         padding-top: 20px;
-        border-top: 2px solid #667eea;
+        border-top: 2px solid #d13f3f;
       }
 
       .analysis-section h4 {
-        color: #667eea;
+        color: #d13f3f;
         margin-bottom: 10px;
         font-size: 0.95em;
       }
@@ -219,8 +308,8 @@
 
       textarea:focus {
         outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        border-color: #d13f3f;
+        box-shadow: 0 0 5px rgba(209, 63, 63, 0.3);
       }
 
       /* D3 specific styles */
@@ -231,13 +320,13 @@
 
       .d3-section {
         background: white;
-        border-left: 4px solid #667eea;
+        border-left: 4px solid #d13f3f;
         padding: 15px;
         border-radius: 5px;
       }
 
       .d3-section h5 {
-        color: #667eea;
+        color: #d13f3f;
         margin-bottom: 15px;
         font-size: 0.95em;
       }
@@ -314,12 +403,12 @@
       }
 
       .btn-primary {
-        background-color: #667eea;
+        background-color: #d13f3f;
         color: white;
       }
 
       .btn-primary:hover {
-        background-color: #5568d3;
+        background-color: #b23030;
       }
 
       .btn-secondary {
@@ -575,7 +664,7 @@
         display: none;
         margin-top: 40px;
         padding: 30px;
-        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        background: linear-gradient(135deg, #d13f3f 0%, #c92d2d 100%);
         border-radius: 15px;
         text-align: center;
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
@@ -641,7 +730,7 @@
 
       .progress-fill {
         height: 100%;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(90deg, #d13f3f 0%, #c92d2d 100%);
         width: 0%;
         transition: width 0.3s;
       }
@@ -686,47 +775,88 @@
         .effect-grid {
           grid-template-columns: 1fr;
         }
+
+        .container {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar-menu {
+          grid-column: 1;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        header .back-home {
+          position: static;
+          transform: none;
+        }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <header>
-        <h1>🎯 Metodologia 8D</h1>
-        <p>Análise de Problemas em 8 Disciplinas</p>
-      </header>
+      <div class="main-content">
+        <header>
+          <a href="../../../../../../../inicio/home_page.html" class="back-home"
+            >← Home</a
+          >
+          <h1>🎯 Metodologia 8D</h1>
+          <p>Análise de Problemas em 8 Disciplinas</p>
+        </header>
 
-      <div class="disciplines-grid" id="disciplinesGrid"></div>
+        <div class="disciplines-grid" id="disciplinesGrid"></div>
 
-      <div class="stats">
-        <div class="stat-item">
-          <div class="stat-number" id="completedCount">0</div>
-          <div class="stat-label">Disciplinas Analisadas</div>
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-number" id="completedCount">0</div>
+            <div class="stat-label">Disciplinas Analisadas</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">7</div>
+            <div class="stat-label">Total de Disciplinas</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="progressPercent">0%</div>
+            <div class="stat-label">Progresso</div>
+          </div>
         </div>
-        <div class="stat-item">
-          <div class="stat-number">7</div>
-          <div class="stat-label">Total de Disciplinas</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number" id="progressPercent">0%</div>
-          <div class="stat-label">Progresso</div>
+
+        <div class="final-report-section" id="finalReportSection">
+          <h2>🎉 Análise Completa!</h2>
+          <p>
+            Todas as disciplinas foram finalizadas. Gere o relatório final
+            agora.
+          </p>
+          <div class="final-report-buttons">
+            <button class="btn btn-success" onclick="generateFinalReport()">
+              📊 Gerar Relatório Completo
+            </button>
+            <button class="btn btn-info" onclick="exportToFile()">
+              💾 Exportar como PDF
+            </button>
+          </div>
         </div>
       </div>
 
-      <div class="final-report-section" id="finalReportSection">
-        <h2>🎉 Análise Completa!</h2>
-        <p>
-          Todas as disciplinas foram finalizadas. Gere o relatório final agora.
-        </p>
-        <div class="final-report-buttons">
-          <button class="btn btn-success" onclick="generateFinalReport()">
-            📊 Gerar Relatório Completo
-          </button>
-          <button class="btn btn-info" onclick="exportToFile()">
-            💾 Exportar como PDF
-          </button>
-        </div>
-      </div>
+      <aside class="sidebar-menu">
+        <a href="../../../../../../../inicio/home_page.html" class="menu-card">
+          <span class="menu-card-icon">🏠</span>
+          <span class="menu-card-title">Home</span>
+        </a>
+        <a href="../A3/A3.html" class="menu-card">
+          <span class="menu-card-icon">📝</span>
+          <span class="menu-card-title">A3</span>
+          <span class="menu-card-badge">Novo</span>
+        </a>
+        <a href="../../sipoc.html" class="menu-card">
+          <span class="menu-card-icon">🧭</span>
+          <span class="menu-card-title">SIPOC</span>
+        </a>
+        <a href="../../dashboard.html" class="menu-card">
+          <span class="menu-card-icon">📊</span>
+          <span class="menu-card-title">Dashboard</span>
+        </a>
+      </aside>
     </div>
 
     <script>

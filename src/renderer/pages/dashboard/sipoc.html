@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIPOC Estruturado</title>
+    <style>
+      body {
+        margin: 0;
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        background: #f4f6fb;
+        color: #2d3347;
+        min-height: 100vh;
+        padding: 32px;
+      }
+      .container {
+        max-width: 980px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 20px 40px rgba(43, 52, 74, 0.08);
+      }
+      h1 {
+        margin-top: 0;
+        font-size: clamp(2rem, 2.4vw, 2.6rem);
+      }
+      p {
+        line-height: 1.8;
+        color: #4f5d72;
+        margin-bottom: 24px;
+      }
+      .panel {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+      }
+      .panel-item {
+        background: #f8fafc;
+        border: 1px solid rgba(45, 51, 71, 0.08);
+        border-radius: 18px;
+        padding: 20px;
+        min-height: 140px;
+      }
+      .panel-item h2 {
+        margin: 0 0 10px;
+        font-size: 1rem;
+        color: #1f2937;
+      }
+      .panel-item p {
+        margin: 0;
+        color: #606f8f;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 28px;
+        color: #d13f3f;
+        text-decoration: none;
+        font-weight: 700;
+      }
+      @media (max-width: 900px) {
+        .panel {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>SIPOC Estruturado</h1>
+      <p>
+        O SIPOC apresenta uma visão simplificada do processo, mapeando
+        fornecedores, entradas, processo, saídas e clientes para orientar a
+        melhoria contínua.
+      </p>
+      <div class="panel">
+        <div class="panel-item">
+          <h2>Fornecedor</h2>
+          <p>
+            Identifique quem fornece os materiais, informações ou insumos
+            necessários para o processo.
+          </p>
+        </div>
+        <div class="panel-item">
+          <h2>Entrada</h2>
+          <p>
+            Liste os dados, materiais ou condições que entram no processo para
+            gerar a entrega final.
+          </p>
+        </div>
+        <div class="panel-item">
+          <h2>Processo</h2>
+          <p>
+            Descreva as etapas principais do fluxo de trabalho que transformam a
+            entrada em saída.
+          </p>
+        </div>
+        <div class="panel-item">
+          <h2>Saída</h2>
+          <p>
+            Defina o que é entregue ao final do processo: produto, serviço ou
+            resultado esperado.
+          </p>
+        </div>
+        <div class="panel-item">
+          <h2>Cliente</h2>
+          <p>
+            Indique quem recebe ou utiliza a saída e quais são suas expectativas
+            principais.
+          </p>
+        </div>
+      </div>
+      <a class="back-link" href="../inicio/home_page.html"
+        >← Voltar para Home</a
+      >
+    </div>
+  </body>
+</html>
