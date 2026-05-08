@@ -1,0 +1,25 @@
+{
+  "name": "causa3",
+  "version": "1.0.0",
+  "description": "Aplicativo de gestão de qualidade - SIPOC, 8D, A3",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "keywords": [
+    "electron",
+    "quality",
+    "sipoc",
+    "8d",
+    "a3"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^25.0.0"
+  },
+  "dependencies": {
+    "html2pdf.js": "^0.10.1"
+  }
+}
