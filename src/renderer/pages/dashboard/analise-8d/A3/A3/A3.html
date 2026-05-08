@@ -46,10 +46,17 @@
         position: relative;
       }
 
-      .pdf-button {
+      .header-actions {
         position: absolute;
         top: 10px;
         right: 14px;
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+      }
+
+      .header-actions button,
+      .header-actions a {
         background: rgba(255, 255, 255, 0.2);
         color: white;
         border: 1px solid rgba(255, 255, 255, 0.3);
@@ -59,9 +66,13 @@
         font-size: 12px;
         font-weight: bold;
         transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
       }
 
-      .pdf-button:hover {
+      .header-actions button:hover,
+      .header-actions a:hover {
         background: rgba(255, 255, 255, 0.3);
         transform: translateY(-1px);
       }
@@ -474,12 +485,19 @@
     <div class="a3-page">
       <!-- CABEÇALHO -->
       <header>
-        <button class="pdf-button" onclick="generatePDF()">📄 Gerar PDF</button>
+        <div class="header-actions">
+          <button class="pdf-button" onclick="generatePDF()">
+            📄 Gerar PDF
+          </button>
+          <a class="home-button" href="../../../../../../inicio/home_page.html"
+            >🏠 Home</a
+          >
+        </div>
         <h1>A3</h1>
         <div class="header-fields">
           <div class="header-field" style="flex: 1 1 260px; min-width: 260px">
             <label>Oportunidade:</label>
-            <input type="text" placeholder="Nome do Projeto" />
+            <input id="projectName" type="text" placeholder="Nome do Projeto" />
           </div>
           <div class="header-field" style="flex: 1 1 180px; min-width: 180px">
             <label>Impacto:</label>
@@ -953,31 +971,43 @@
       // Função para gerar PDF
       function generatePDF() {
         const element = document.querySelector('.a3-page');
+        const projectName = document.getElementById('projectName').value.trim();
+        const safeName = projectName.replace(/[<>:"\\/|?*]+/g, '').trim();
+        const fileName = safeName
+          ? `A3 - ${safeName}.pdf`
+          : 'A3 - nome do projeto.pdf';
+
         const opt = {
-          margin: 0.5,
-          filename: 'formulario-a3.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
-          jsPDF: { unit: 'in', format: 'a3', orientation: 'landscape' },
+          margin: 0,
+          filename: fileName,
+          image: { type: 'jpeg', quality: 1 },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            scrollY: -window.scrollY,
+          },
+          jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' },
+          pagebreak: { mode: ['css', 'legacy'] },
         };
 
-        // Ocultar o botão de PDF temporariamente durante a geração
-        const pdfButton = document.querySelector('.pdf-button');
-        pdfButton.style.display = 'none';
+        const headerActions = document.querySelector('.header-actions');
+        if (headerActions) {
+          headerActions.style.display = 'none';
+        }
 
         html2pdf()
           .set(opt)
           .from(element)
           .save()
           .then(() => {
-            // Mostrar o botão novamente após gerar o PDF
-            pdfButton.style.display = 'block';
+            if (headerActions) {
+              headerActions.style.display = 'flex';
+            }
           });
       }
 
       // Função para adicionar linha na tabela do plano de ação
       function addActionRow() {
-        // Encontrar a tabela do plano de ação
         const sections = document.querySelectorAll('.section');
         let actionTable = null;
 
@@ -1017,10 +1047,8 @@
             </td>
           `;
 
-          // Inserir a nova linha antes do botão de adicionar
-          const addButton =
-            actionTable.parentNode.querySelector('.add-row-button');
-          actionTable.insertBefore(newRow, addButton);
+          const tbody = actionTable.tBodies[0] || actionTable;
+          tbody.appendChild(newRow);
         }
       }
     </script>

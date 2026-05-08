@@ -36,28 +36,73 @@
         color: #4f5d72;
         margin-bottom: 24px;
       }
-      .panel {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 16px;
+      .top-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 24px;
       }
-      .panel-item {
+      .button,
+      .button-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 22px;
+        border-radius: 14px;
+        border: none;
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .button {
+        background: #d13f3f;
+        color: #ffffff;
+      }
+      .button:hover {
+        background: #ab3030;
+      }
+      .button-secondary {
         background: #f8fafc;
-        border: 1px solid rgba(45, 51, 71, 0.08);
-        border-radius: 18px;
-        padding: 20px;
-        min-height: 140px;
-      }
-      .panel-item h2 {
-        margin: 0 0 10px;
-        font-size: 1rem;
         color: #1f2937;
+        border: 1px solid rgba(45, 51, 71, 0.12);
       }
-      .panel-item p {
-        margin: 0;
-        color: #606f8f;
+      .sipoc-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+      }
+      .sipoc-table th,
+      .sipoc-table td {
+        border: 1px solid rgba(45, 51, 71, 0.12);
+        padding: 14px 12px;
+        text-align: left;
+        vertical-align: top;
+      }
+      .sipoc-table th {
+        background: #f8fafc;
+        color: #1f2937;
         font-size: 0.95rem;
-        line-height: 1.6;
+        font-weight: 700;
+      }
+      .sipoc-table tbody tr:nth-child(even) {
+        background: #f9fbff;
+      }
+      .sipoc-table a {
+        color: #d13f3f;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .sipoc-table a:hover {
+        text-decoration: underline;
+      }
+      .empty-state {
+        background: #eff6ff;
+        border: 1px dashed #93c5fd;
+        border-radius: 20px;
+        padding: 28px;
+        text-align: center;
+        color: #1d4ed8;
       }
       .back-link {
         display: inline-flex;
@@ -68,61 +113,91 @@
         text-decoration: none;
         font-weight: 700;
       }
-      @media (max-width: 900px) {
-        .panel {
-          grid-template-columns: 1fr;
+      @media (max-width: 760px) {
+        .top-actions {
+          flex-direction: column;
         }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>SIPOC Estruturado</h1>
+      <h1>SIPOCs cadastrados</h1>
       <p>
-        O SIPOC apresenta uma visão simplificada do processo, mapeando
-        fornecedores, entradas, processo, saídas e clientes para orientar a
-        melhoria contínua.
+        Veja todos os SIPOCs já registrados e crie um novo formulário de SIPOC
+        sempre que precisar.
       </p>
-      <div class="panel">
-        <div class="panel-item">
-          <h2>Fornecedor</h2>
-          <p>
-            Identifique quem fornece os materiais, informações ou insumos
-            necessários para o processo.
-          </p>
-        </div>
-        <div class="panel-item">
-          <h2>Entrada</h2>
-          <p>
-            Liste os dados, materiais ou condições que entram no processo para
-            gerar a entrega final.
-          </p>
-        </div>
-        <div class="panel-item">
-          <h2>Processo</h2>
-          <p>
-            Descreva as etapas principais do fluxo de trabalho que transformam a
-            entrada em saída.
-          </p>
-        </div>
-        <div class="panel-item">
-          <h2>Saída</h2>
-          <p>
-            Defina o que é entregue ao final do processo: produto, serviço ou
-            resultado esperado.
-          </p>
-        </div>
-        <div class="panel-item">
-          <h2>Cliente</h2>
-          <p>
-            Indique quem recebe ou utiliza a saída e quais são suas expectativas
-            principais.
-          </p>
-        </div>
+      <div class="top-actions">
+        <a class="button" href="create-sipoc.html">+ Novo SIPOC</a>
+        <button class="button-secondary" type="button" onclick="clearSipocs()">
+          Limpar lista
+        </button>
+      </div>
+      <div id="sipocContainer">
+        <table id="sipocTable" class="sipoc-table">
+          <thead>
+            <tr>
+              <th>Processo</th>
+              <th>Data de emissão</th>
+              <th>Hora</th>
+              <th>Elaborador</th>
+              <th>Data revisão</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="sipocBody"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty-state" style="display: none">
+        <strong>Nenhum SIPOC cadastrado ainda.</strong>
+        <p>Use o botão "Novo SIPOC" para criar um novo registro.</p>
       </div>
       <a class="back-link" href="../inicio/home_page.html"
         >← Voltar para Home</a
       >
     </div>
+    <script>
+      const STORAGE_KEY = 'sipoc_entries';
+      const sipocBody = document.getElementById('sipocBody');
+      const emptyState = document.getElementById('emptyState');
+      const sipocTable = document.getElementById('sipocTable');
+
+      function loadSipocs() {
+        const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        sipocBody.innerHTML = '';
+
+        if (!list.length) {
+          sipocTable.style.display = 'none';
+          emptyState.style.display = 'block';
+          return;
+        }
+
+        sipocTable.style.display = 'table';
+        emptyState.style.display = 'none';
+
+        list.forEach((sipoc) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${sipoc.processoArea || 'Não informado'}</td>
+            <td>${sipoc.emissaoData || sipoc.createdAt.split(' ')[0] || '–'}</td>
+            <td>${sipoc.emissaoHora || sipoc.createdAt.split(' ')[1] || '–'}</td>
+            <td>${sipoc.elaborador || '–'}</td>
+            <td>${sipoc.revisaoData || '–'}</td>
+            <td><a href="create-sipoc.html?id=${sipoc.id}">Abrir</a></td>
+          `;
+          sipocBody.appendChild(row);
+        });
+      }
+
+      function clearSipocs() {
+        if (!confirm('Limpar todos os SIPOCs cadastrados?')) {
+          return;
+        }
+        localStorage.removeItem(STORAGE_KEY);
+        loadSipocs();
+      }
+
+      loadSipocs();
+    </script>
   </body>
 </html>

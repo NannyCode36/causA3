@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Criar novo SIPOC</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f4f6fb;
+        color: #2d3347;
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      .container {
+        max-width: 1080px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(43, 52, 74, 0.08);
+        overflow: hidden;
+      }
+
+      .page-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 28px 32px;
+        background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+        color: #ffffff;
+      }
+
+      .page-header h1 {
+        margin: 0;
+        font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+        letter-spacing: 0.05em;
+      }
+
+      .page-header p {
+        margin: 0;
+        max-width: 640px;
+        color: rgba(255, 255, 255, 0.88);
+      }
+
+      .page-header .header-info {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .page-header .badge {
+        background: rgba(255, 255, 255, 0.18);
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .form-area {
+        padding: 32px;
+      }
+
+      .grid-2,
+      .grid-3 {
+        display: grid;
+        gap: 18px;
+      }
+
+      .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .section {
+        background: #f8fafc;
+        border: 1px solid rgba(45, 51, 71, 0.1);
+        border-radius: 18px;
+        padding: 22px;
+      }
+
+      .section-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+
+      .field {
+        display: grid;
+        gap: 10px;
+      }
+
+      .field label {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .field select,
+      .field textarea {
+        width: 100%;
+        border: 1px solid rgba(45, 51, 71, 0.18);
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 1rem;
+        font-family: inherit;
+        background: #ffffff;
+        color: #1f2937;
+      }
+
+      .field textarea {
+        min-height: 120px;
+        resize: vertical;
+        line-height: 1.6;
+      }
+
+      .field select {
+        height: 48px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .button,
+      .button-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: none;
+        border-radius: 14px;
+        padding: 14px 22px;
+        cursor: pointer;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .button {
+        background: #d13f3f;
+        color: #ffffff;
+      }
+
+      .button:hover {
+        background: #ab3030;
+      }
+
+      .button-secondary {
+        background: #e2e8f0;
+        color: #1f2937;
+      }
+
+      .button-secondary:hover {
+        background: #cbd5e1;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 24px;
+        color: #d13f3f;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <div>
+          <h1>Novo SIPOC</h1>
+          <p>
+            Preencha os blocos do SIPOC e registre o processo com documentação,
+            indicadores, riscos e oportunidades.
+          </p>
+        </div>
+        <div class="header-info">
+          <span class="badge">Formato A3</span>
+          <span class="badge">Processo</span>
+        </div>
+      </div>
+
+      <div class="form-area">
+        <form id="sipocForm">
+          <div class="grid-3">
+            <div class="section">
+              <div class="section-title">Processo</div>
+              <div class="field">
+                <label for="processoArea">Selecione o processo</label>
+                <select id="processoArea" name="processoArea" required>
+                  <option value="">Selecione um processo</option>
+                  <option>SGQ</option>
+                  <option>QUALIDADE</option>
+                  <option>ENGENHARIA DE PRODUTO</option>
+                  <option>ENGENHARIA DE PROCESSOS</option>
+                  <option>PRODUÇÃO</option>
+                  <option>RECEBIMENTO</option>
+                  <option>ALMOXARIFADO</option>
+                  <option>EXPEDIÇÃO</option>
+                  <option>PLANEJAMENTO</option>
+                  <option>RH</option>
+                  <option>FISCAL</option>
+                  <option>COMPRAS</option>
+                  <option>RELACIONAMENTO</option>
+                  <option>MANUTENÇÃO</option>
+                </select>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Emissão</div>
+              <div class="field">
+                <label for="emissaoData">Data de emissão</label>
+                <input
+                  id="emissaoData"
+                  name="emissaoData"
+                  type="date"
+                  required
+                />
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Hora</div>
+              <div class="field">
+                <label for="emissaoHora">Hora de emissão</label>
+                <input
+                  id="emissaoHora"
+                  name="emissaoHora"
+                  type="time"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="section">
+              <div class="section-title">Elaborador</div>
+              <div class="field">
+                <label for="elaborador">Responsável</label>
+                <input
+                  id="elaborador"
+                  name="elaborador"
+                  type="text"
+                  placeholder="Nome do elaborador"
+                  required
+                />
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Revisão</div>
+              <div class="field">
+                <label for="revisaoData">Data de revisão</label>
+                <input id="revisaoData" name="revisaoData" type="date" />
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Documentação</div>
+              <div class="field">
+                <label for="documentacao">Principais documentos</label>
+                <textarea
+                  id="documentacao"
+                  name="documentacao"
+                  placeholder="Referências, normas, procedimentos ou registros utilizados"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="section">
+              <div class="section-title">Fornecedores</div>
+              <div class="field">
+                <textarea
+                  id="fornecedores"
+                  name="fornecedores"
+                  placeholder="Quem fornece os insumos ou informações"
+                  required
+                ></textarea>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Entradas</div>
+              <div class="field">
+                <textarea
+                  id="entradas"
+                  name="entradas"
+                  placeholder="Dados, materiais e condições de entrada"
+                  required
+                ></textarea>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Processo</div>
+              <div class="field">
+                <textarea
+                  id="processo"
+                  name="processo"
+                  placeholder="Etapas principais do fluxo"
+                  required
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="section">
+              <div class="section-title">Saídas</div>
+              <div class="field">
+                <textarea
+                  id="saidas"
+                  name="saidas"
+                  placeholder="O que é entregue ao final"
+                  required
+                ></textarea>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Clientes</div>
+              <div class="field">
+                <textarea
+                  id="clientes"
+                  name="clientes"
+                  placeholder="Quem recebe ou utiliza a saída"
+                  required
+                ></textarea>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Indicadores</div>
+              <div class="field">
+                <textarea
+                  id="indicadores"
+                  name="indicadores"
+                  placeholder="Métricas ou indicadores de desempenho"
+                  required
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="section">
+              <div class="section-title">Riscos</div>
+              <div class="field">
+                <textarea
+                  id="riscos"
+                  name="riscos"
+                  placeholder="Principais riscos e não conformidades"
+                  required
+                ></textarea>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Oportunidades</div>
+              <div class="field">
+                <textarea
+                  id="oportunidades"
+                  name="oportunidades"
+                  placeholder="Melhorias e oportunidades de ganho"
+                  required
+                ></textarea>
+              </div>
+            </div>
+            <div class="section">
+              <div class="section-title">Observações</div>
+              <div class="field">
+                <textarea
+                  id="observacoes"
+                  name="observacoes"
+                  placeholder="Outras informações relevantes"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="button" type="button" onclick="generatePDF()">
+              Gerar PDF
+            </button>
+            <button class="button" type="submit">Salvar SIPOC</button>
+            <a class="button-secondary" href="sipoc.html">Cancelar</a>
+          </div>
+        </form>
+        <a class="back-link" href="sipoc.html">← Voltar para lista de SIPOCs</a>
+      </div>
+    </div>
+    <script>
+      const STORAGE_KEY = 'sipoc_entries';
+      const sipocForm = document.getElementById('sipocForm');
+      const formTitle = document.querySelector('.page-header h1');
+      const processSelect = document.getElementById('processoArea');
+      const emissionDate = document.getElementById('emissaoData');
+      const emissionTime = document.getElementById('emissaoHora');
+      const elaboratorInput = document.getElementById('elaborador');
+      const revisionDate = document.getElementById('revisaoData');
+
+      function getQueryParam(name) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(name);
+      }
+
+      function fillForm(data) {
+        processSelect.value = data.processoArea || '';
+        emissionDate.value = data.emissaoData || '';
+        emissionTime.value = data.emissaoHora || '';
+        elaboratorInput.value = data.elaborador || '';
+        revisionDate.value = data.revisaoData || '';
+        document.getElementById('documentacao').value = data.documentacao || '';
+        document.getElementById('fornecedores').value = data.fornecedores || '';
+        document.getElementById('entradas').value = data.entradas || '';
+        document.getElementById('processo').value = data.processo || '';
+        document.getElementById('saidas').value = data.saidas || '';
+        document.getElementById('clientes').value = data.clientes || '';
+        document.getElementById('indicadores').value = data.indicadores || '';
+        document.getElementById('riscos').value = data.riscos || '';
+        document.getElementById('oportunidades').value =
+          data.oportunidades || '';
+        document.getElementById('observacoes').value = data.observacoes || '';
+      }
+
+      function loadSipocById(id) {
+        const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        return list.find((item) => item.id.toString() === id);
+      }
+
+      function saveSipoc(data) {
+        const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const index = existing.findIndex((item) => item.id === data.id);
+        if (index >= 0) {
+          existing[index] = data;
+        } else {
+          existing.unshift(data);
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+      }
+
+      function getFormData() {
+        return {
+          id: Date.now(),
+          processoArea: processSelect.value,
+          emissaoData: emissionDate.value,
+          emissaoHora: emissionTime.value,
+          elaborador: elaboratorInput.value.trim(),
+          revisaoData: revisionDate.value,
+          fornecedores: document.getElementById('fornecedores').value.trim(),
+          entradas: document.getElementById('entradas').value.trim(),
+          processo: document.getElementById('processo').value.trim(),
+          saidas: document.getElementById('saidas').value.trim(),
+          clientes: document.getElementById('clientes').value.trim(),
+          documentacao: document.getElementById('documentacao').value.trim(),
+          indicadores: document.getElementById('indicadores').value.trim(),
+          riscos: document.getElementById('riscos').value.trim(),
+          oportunidades: document.getElementById('oportunidades').value.trim(),
+          observacoes: document.getElementById('observacoes').value.trim(),
+          createdAt: new Date().toLocaleString('pt-BR'),
+        };
+      }
+
+      function generatePDF() {
+        const element = document.querySelector('.container');
+        const opt = {
+          margin: 0.4,
+          filename: 'sipoc.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        };
+        html2pdf().set(opt).from(element).save();
+      }
+
+      const sipocId = getQueryParam('id');
+      if (sipocId) {
+        const existingSipoc = loadSipocById(sipocId);
+        if (existingSipoc) {
+          fillForm(existingSipoc);
+          formTitle.textContent = 'Editar SIPOC';
+        }
+      }
+
+      sipocForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const data = getFormData();
+        if (!data.processoArea) {
+          alert('Selecione um processo antes de salvar.');
+          return;
+        }
+        if (!data.emissaoData || !data.emissaoHora || !data.elaborador) {
+          alert('Preencha emissão, hora e elaborador antes de salvar.');
+          return;
+        }
+
+        if (sipocId) {
+          data.id = Number(sipocId);
+        }
+
+        saveSipoc(data);
+        window.location.href = 'sipoc.html';
+      });
+    </script>
+  </body>
+</html>
