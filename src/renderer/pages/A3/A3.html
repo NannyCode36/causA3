@@ -22,7 +22,9 @@
 
       .a3-page {
         width: 420mm;
-        height: 297mm;
+        max-width: 100%;
+        min-height: 297mm;
+        height: auto;
         background: white;
         margin: 15px auto;
         padding: 18px;
@@ -151,12 +153,12 @@
         grid-template-columns: 1fr;
         gap: 10px;
         flex: 1;
-        overflow: hidden;
+        overflow: visible;
       }
 
       .content-row {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
         gap: 10px;
       }
 
@@ -194,9 +196,14 @@
 
       .section-content {
         flex: 1;
-        overflow: hidden;
+        overflow: visible;
         display: flex;
         flex-direction: column;
+      }
+
+      .section.col-full {
+        grid-column: 1 / -1;
+        page-break-inside: avoid;
       }
 
       textarea {
@@ -205,11 +212,13 @@
         padding: 6px;
         font-family: 'Segoe UI', sans-serif;
         font-size: 12px;
-        resize: none;
+        resize: vertical;
         border-radius: 4px;
         background: white;
         color: #333;
         transition: border-color 0.3s;
+        overflow: auto;
+        min-height: 60px;
       }
 
       textarea:focus {
@@ -252,27 +261,43 @@
 
       .image-gallery {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-        gap: 6px;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
         margin-top: 6px;
-        max-height: 200px;
-        overflow-y: auto;
+        overflow: visible;
       }
 
       .image-item {
         position: relative;
-        width: 80px;
-        height: 80px;
+        width: 100%;
+        min-height: 80px;
         border: 1px solid #ddd;
         border-radius: 3px;
         overflow: hidden;
         background: white;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
       }
 
       .image-item img {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
+        height: auto;
+        object-fit: contain;
+        display: block;
+      }
+
+      .image-item .image-comment {
+        display: block;
+        position: static;
+        background: transparent;
+        color: #333;
+        font-size: 11px;
+        padding: 4px 6px 6px;
+        text-align: left;
+        overflow: visible;
+        text-overflow: initial;
+        white-space: normal;
       }
 
       .image-item .remove-btn {
@@ -470,6 +495,7 @@
           width: 100%;
           height: auto;
           border-radius: 0;
+          page-break-inside: avoid;
         }
         header {
           box-shadow: none;
@@ -477,6 +503,44 @@
         }
         .section {
           box-shadow: none;
+          page-break-inside: avoid;
+        }
+        .image-placeholder {
+          display: none !important;
+        }
+        .header-actions {
+          display: none !important;
+        }
+        .image-gallery {
+          display: block !important;
+        }
+        .image-item {
+          width: auto !important;
+          height: auto !important;
+          max-width: 100% !important;
+          max-height: 200px !important;
+          margin-bottom: 10px;
+        }
+        .image-item img {
+          width: auto !important;
+          height: auto !important;
+          max-width: 100% !important;
+          max-height: 200px !important;
+          object-fit: contain !important;
+        }
+        .image-item .image-comment {
+          display: block !important;
+          position: static !important;
+          background: transparent !important;
+          color: #333 !important;
+          font-size: 10px !important;
+          padding: 2px 0 !important;
+          margin-top: 2px !important;
+          text-align: left !important;
+          white-space: normal !important;
+        }
+        .section.col-full {
+          page-break-inside: avoid !important;
         }
       }
     </style>
@@ -567,7 +631,7 @@
                   >Benefícios</label
                 >
                 <textarea
-                  placeholder="Descrever os benefícios..."
+                  placeholder="Descrever os benefícios alcançados..."
                   style="flex: 1; font-size: 12px; min-height: 80px"
                 ></textarea>
               </div>
@@ -880,7 +944,13 @@
         files.forEach((file) => {
           const reader = new FileReader();
           reader.onload = (e) => {
-            const img = { src: e.target.result, name: file.name, comment: '' };
+            const img = {
+              src: e.target.result,
+              name: file.name,
+              comment: '',
+              width: 100,
+              height: 100,
+            };
             manager.images.push(img);
             renderGallery(manager);
           };
@@ -893,14 +963,37 @@
         gallery.innerHTML = manager.images
           .map(
             (img, idx) => `
-          <div class="image-item">
+          <div class="image-item" style="max-width: ${img.width || 100}%;" onclick="resizeImage('${manager.gallery}', ${idx})">
             <img src="${img.src}" alt="${img.name}" title="${img.name}${img.comment ? '\n\nComentário: ' + img.comment : ''}">
-            <button class="remove-btn" onclick="removeImage('${manager.gallery}', ${idx})">×</button>
-            <button class="image-comment-btn" onclick="openCommentModal('${manager.gallery}', ${idx})">💬</button>
+            <div class="image-comment">${img.comment || ''}</div>
+            <button class="remove-btn" onclick="event.stopPropagation(); removeImage('${manager.gallery}', ${idx})">×</button>
+            <button class="image-comment-btn" onclick="event.stopPropagation(); openCommentModal('${manager.gallery}', ${idx})">💬</button>
           </div>
         `,
           )
           .join('');
+      }
+
+      function resizeImage(galleryId, index) {
+        const managerKey = Object.keys(imageManagers).find(
+          (key) => imageManagers[key].gallery === galleryId,
+        );
+        if (managerKey) {
+          const image = imageManagers[managerKey].images[index];
+          const newWidth = prompt(
+            'Digite a largura da imagem (em %):',
+            image.width || 100,
+          );
+          const newHeight = prompt(
+            'Digite a altura da imagem (em %):',
+            image.height || 100,
+          );
+          if (newWidth !== null && newHeight !== null) {
+            image.width = parseInt(newWidth) || 100;
+            image.height = parseInt(newHeight) || 100;
+            renderGallery(imageManagers[managerKey]);
+          }
+        }
       }
 
       function removeImage(galleryId, index) {
