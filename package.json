@@ -4,8 +4,13 @@
   "description": "Aplicativo de gestão de qualidade - SIPOC, 8D, A3",
   "main": "src/main/main.js",
   "scripts": {
-    "start": "electron .",
-    "dev": "electron . --dev"
+    "start": "npm run backend & npm run electron",
+    "backend": "node src/backend/server.js",
+    "backend:dev": "node --watch src/backend/server.js",
+    "electron": "electron .",
+    "dev": "npm run backend:dev & npm run electron -- --dev",
+    "seed": "node -e \"require('./src/backend/config/seed')()\"",
+    "db:reset": "node -e \"require('mongoose').connect(process.env.MONGODB_URI).then(() => require('mongoose').connection.db.dropDatabase())\""
   },
   "keywords": [
     "electron",
@@ -20,6 +25,10 @@
     "electron": "^25.0.0"
   },
   "dependencies": {
-    "html2pdf.js": "^0.10.1"
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.0"
   }
 }

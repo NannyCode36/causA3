@@ -6,24 +6,24 @@
 
 ## Fase 1 — Configuração e estrutura base
 
-- [ ] Inicializar repositório no GitHub
-- [ ] Configurar projeto Node.js com package.json
-- [ ] Instalar e configurar Electron.js
-- [ ] Configurar estrutura de pastas do projeto (main, renderer, backend)
+- [x] Inicializar repositório no GitHub
+- [x] Configurar projeto Node.js com package.json
+- [x] Instalar e configurar Electron.js
+- [x] Configurar estrutura de pastas do projeto (main, renderer, backend)
 - [ ] Configurar Express.js como servidor backend local
 - [ ] Conectar Express ao processo Electron via IPC ou HTTP local
-- [ ] Criar `.env.example` com variáveis necessárias
+- [x] Criar `.env.example` com variáveis necessárias
 
 ---
 
 ## Fase 2 — Banco de dados e modelos
 
-- [ ] Instalar e configurar MongoDB local com Mongoose
-- [ ] Criar modelo de dados para Análise 8D (8 disciplinas)
-- [ ] Criar modelo de dados para projeto A3 (PDCA)
-- [ ] Criar modelo de dados para Planos de Ação
-- [ ] Criar modelo de dados para Histórico e controle de versões
-- [ ] Criar seed de dados para testes iniciais
+- [x] Instalar e configurar MongoDB local com Mongoose
+- [x] Criar modelo de dados para Análise 8D (8 disciplinas)
+- [x] Criar modelo de dados para projeto A3 (PDCA)
+- [x] Criar modelo de dados para Planos de Ação
+- [x] Criar modelo de dados para Histórico e controle de versões
+- [x] Criar seed de dados para testes iniciais
 
 ---
 
