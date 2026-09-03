@@ -9,7 +9,7 @@ const historicoSchema = new mongoose.Schema({
   tipoDocumento: {
     type: String,
     required: true,
-    enum: ['Analise8D', 'ProjetoA3', 'PlanoAcao'],
+    enum: ['Analise8D', 'ProjetoA3', 'PlanoAcao', 'Ocorrencia'],
   },
 
   // Informações da alteração

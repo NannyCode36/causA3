@@ -3,19 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home - causA3</title>
+    <title>Central de Qualidade - causA3</title>
     <style>
       :root {
         color-scheme: light;
-        font-family:
-          Inter,
-          system-ui,
-          -apple-system,
-          BlinkMacSystemFont,
-          'Segoe UI',
-          sans-serif;
-        background: #f4f6fb;
-        color: #2d3347;
+        font-family: 'Segoe UI', sans-serif;
+        background: #eef2f5;
+        color: #172b4d;
       }
       * {
         box-sizing: border-box;
@@ -23,56 +17,57 @@
       body {
         margin: 0;
         min-height: 100vh;
-        padding: 32px;
+        padding: 28px;
         display: flex;
         justify-content: center;
-        background: linear-gradient(
-          135deg,
-          #fafbff 0%,
-          #f3f5ff 50%,
-          #fff0f1 100%
-        );
+        background: radial-gradient(circle at 8% 0%, #fff 0, transparent 34%), #eef2f5;
       }
       .page {
         width: min(1200px, 100%);
       }
       header {
-        margin-bottom: 32px;
+        margin-bottom: 24px;
+        padding: 24px 26px;
+        border: 1px solid #d5dde6;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 8px 24px rgba(23, 62, 104, 0.06);
       }
       .title-section {
         display: flex;
         align-items: flex-start;
         gap: 16px;
-        margin-bottom: 8px;
+        margin-bottom: 0;
       }
       .title-section h1 {
         margin: 0;
-        font-size: clamp(2rem, 2.4vw, 2.8rem);
-        letter-spacing: -0.03em;
+        font-size: clamp(2rem, 3vw, 2.8rem);
+        letter-spacing: 0;
+        color: #173e68;
       }
       .title-section p {
         margin: 8px 0 0;
-        max-width: 650px;
-        line-height: 1.7;
-        color: #57606a;
+        max-width: 720px;
+        line-height: 1.6;
+        color: #64748b;
         font-size: 1rem;
       }
       .grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 24px;
+        gap: 16px;
       }
       .card {
         position: relative;
-        background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%);
-        border-radius: 30px;
-        padding: 32px;
-        min-height: 280px;
+        background: #fff;
+        border-radius: 10px;
+        padding: 24px;
+        min-height: 238px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        border: 1px solid rgba(209, 63, 63, 0.08);
-        box-shadow: 0 24px 60px rgba(209, 63, 63, 0.06);
+        border: 1px solid #d5dde6;
+        box-shadow: 0 8px 24px rgba(23, 62, 104, 0.05);
         overflow: hidden;
         transition:
           transform 220ms ease,
@@ -86,17 +81,12 @@
         left: 0;
         width: 100%;
         height: 4px;
-        background: linear-gradient(
-          90deg,
-          #c92d2d 0%,
-          #d13f3f 50%,
-          #e63946 100%
-        );
+        background: #b5232a;
       }
       .card:hover {
-        transform: translateY(-6px);
-        border-color: rgba(209, 63, 63, 0.2);
-        box-shadow: 0 32px 80px rgba(209, 63, 63, 0.12);
+        transform: translateY(-3px);
+        border-color: #b5232a;
+        box-shadow: 0 14px 28px rgba(23, 62, 104, 0.12);
       }
       .card-top {
         display: flex;
@@ -110,15 +100,11 @@
       .card-icon {
         width: 56px;
         height: 56px;
-        border-radius: 18px;
+        border-radius: 8px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(
-          135deg,
-          rgba(209, 63, 63, 0.1) 0%,
-          rgba(230, 57, 70, 0.08) 100%
-        );
+        background: #fbe9e9;
         font-size: 1.6rem;
         margin-right: 14px;
         flex-shrink: 0;
@@ -132,25 +118,25 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 7px 13px;
-        border-radius: 999px;
+        padding: 5px 10px;
+        border-radius: 4px;
         font-size: 0.78rem;
         font-weight: 700;
         color: #ffffff;
-        background: linear-gradient(135deg, #d13f3f 0%, #c92d2d 100%);
+        background: #b5232a;
         box-shadow: 0 8px 16px rgba(209, 63, 63, 0.18);
         text-transform: uppercase;
         letter-spacing: 0.3px;
       }
       .description {
         margin: 0;
-        line-height: 1.85;
-        color: #4b5665;
+        line-height: 1.65;
+        color: #526276;
         flex: 1;
         font-size: 1rem;
       }
       .card-footer {
-        margin-top: 24px;
+        margin-top: 18px;
         display: flex;
         justify-content: flex-start;
         position: relative;
@@ -160,19 +146,19 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 13px 22px;
-        border-radius: 999px;
-        background: linear-gradient(135deg, #d13f3f 0%, #c92d2d 100%);
+        padding: 10px 14px;
+        border-radius: 5px;
+        background: #b5232a;
         color: #ffffff;
         text-decoration: none;
         font-weight: 700;
         transition: all 200ms ease;
-        box-shadow: 0 8px 16px rgba(209, 63, 63, 0.2);
+        box-shadow: none;
       }
       .card a:hover {
-        background: linear-gradient(135deg, #c92d2d 0%, #b23030 100%);
+        background: #8f1d23;
         transform: translateY(-2px);
-        box-shadow: 0 12px 24px rgba(209, 63, 63, 0.28);
+        box-shadow: none;
       }
       .card-note {
         margin-top: 16px;
@@ -194,10 +180,9 @@
       <header>
         <div class="title-section">
           <div>
-            <h1>Bem-vindo ao causA3</h1>
+            <h1>Central de Qualidade</h1>
             <p>
-              Escolha a ferramenta desejada para começar a analisar problemas,
-              estruturar melhorias e acompanhar a evolução do 8D e do A3.
+              Acesse as ferramentas de análise, mapeamento, tratativas e melhoria em um único espaço.
             </p>
           </div>
         </div>
@@ -208,18 +193,33 @@
             <div class="card-top">
               <span class="card-icon">📌</span>
               <div>
-                <h2 class="card-title">8D</h2>
+                <h2 class="card-title">Análises</h2>
                 <span class="badge">Qualidade</span>
               </div>
             </div>
             <p class="description">
-              A metodologia 8D ajuda a identificar a origem de um problema,
-              definir ações corretivas e garantir que a causa raiz seja
-              eliminada.
+              Estruture a investigação de problemas e acompanhe a solução com metodologias de qualidade.
             </p>
           </div>
           <div class="card-footer">
-            <a href="../dashboard/analise-8d/A3/analise-8d/8d.html">Abrir 8D</a>
+            <a href="../analise-8d/8d.html">Analise 8D</a>
+          </div>
+        </article>
+        <article class="card">
+          <div>
+            <div class="card-top">
+              <span class="card-icon">⌘</span>
+              <div>
+                <h2 class="card-title">Melhorias (A3)</h2>
+                <span class="badge">Melhoria</span>
+              </div>
+            </div>
+            <p class="description">
+              Organize problemas, metas e ações em uma visão objetiva para conduzir projetos de melhoria.
+            </p>
+          </div>
+          <div class="card-footer">
+            <a href="../A3/A3.html">Abrir A3</a>
           </div>
         </article>
         <article class="card">
@@ -227,17 +227,17 @@
             <div class="card-top">
               <span class="card-icon">📝</span>
               <div>
-                <h2 class="card-title">A3</h2>
-                <span class="badge">Melhoria</span>
+                <h2 class="card-title">Mapeamento</h2>
+                <span class="badge">Processos</span>
               </div>
             </div>
             <p class="description">
-              O A3 organiza o problema, metas e ações em uma só folha,
-              promovendo clareza e alinhamento na solução.
+              Visualize o processo de ponta a ponta e documente suas entradas, etapas e saídas.
             </p>
           </div>
           <div class="card-footer">
-            <a href="../dashboard/analise-8d/A3/A3/A3.html">Abrir A3</a>
+            <a href="../sipoc/sipoc.html">SIPOC</a>
+            <a href="../sipoc/macrofluxo.html">Macrofluxo</a>
           </div>
         </article>
         <article class="card">
@@ -245,17 +245,16 @@
             <div class="card-top">
               <span class="card-icon">🧭</span>
               <div>
-                <h2 class="card-title">SIPOC estruturado</h2>
-                <span class="badge">Processo</span>
+                <h2 class="card-title">Tratativas de Ocorrências (Clientes)</h2>
+                <span class="badge">Clientes</span>
               </div>
             </div>
             <p class="description">
-              SIPOC mapeia fornecedores, entradas, processo, saídas e clientes
-              para estruturar a visão completa do fluxo de trabalho.
+              Registre ocorrências de clientes em uma tabela clara e acompanhe prioridade, responsável e status.
             </p>
           </div>
           <div class="card-footer">
-            <a href="../dashboard/sipoc.html">Abrir SIPOC</a>
+            <a href="../ocorrencias/ocorrencias.html">Nova ocorrência</a>
           </div>
         </article>
         <article class="card">
@@ -263,17 +262,16 @@
             <div class="card-top">
               <span class="card-icon">📊</span>
               <div>
-                <h2 class="card-title">Dashboard</h2>
-                <span class="badge">Evolução</span>
+                <h2 class="card-title">Dashboards</h2>
+                <span class="badge">Indicadores</span>
               </div>
             </div>
             <p class="description">
-              Visão geral da evolução dos projetos 8D e A3, com status,
-              progresso e resultados em um único painel.
+              Transforme os registros em indicadores para orientar prioridades e decisões.
             </p>
           </div>
           <div class="card-footer">
-            <a href="../dashboard/dashboard.html">Abrir Dashboard</a>
+            <a href="../dashboards/dashboard.html">Ocorrências</a>
           </div>
         </article>
       </section>

@@ -233,6 +233,8 @@ const projetoA3Schema = new mongoose.Schema({
   orcamento: Number,
 });
 
+projetoA3Schema.index({ status: 1, dataAtualizacao: -1 });
+
 // Middleware para atualizar data de modificação
 projetoA3Schema.pre('save', function (next) {
   this.dataAtualizacao = new Date();

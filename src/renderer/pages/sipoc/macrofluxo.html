@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Macrofluxo - causA3</title>
+  <style>
+    :root { font-family: 'Segoe UI', sans-serif; color: #172b4d; background: #f3f6f8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 32px; background: radial-gradient(circle at 10% 0%, #fff 0, transparent 36%), #f3f6f8; }
+    .page { max-width: 1180px; margin: auto; }
+    .back { color: #8f1d23; text-decoration: none; font-weight: 700; }
+    header { display: flex; justify-content: space-between; gap: 20px; align-items: end; margin: 24px 0; }
+    h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); color: #173e68; }
+    .subtitle { color: #64748b; margin: 8px 0 0; }
+    .panel { background: #fff; border: 1px solid #d7dee7; border-radius: 10px; padding: 24px; box-shadow: 0 8px 22px rgba(23,62,104,.06); }
+    .flow { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); gap: 12px; align-items: stretch; }
+    .step { position: relative; border: 1px solid #d7dee7; border-top: 4px solid #b5232a; border-radius: 8px; padding: 18px; min-height: 170px; background: #fbfcfd; }
+    .step:not(:last-child)::after { content: '›'; position: absolute; right: -18px; top: 58px; color: #b5232a; font-size: 2rem; z-index: 2; }
+    .number { color: #b5232a; font-weight: 800; font-size: .85rem; }
+    h2 { margin: 10px 0 8px; font-size: 1.05rem; }
+    .step p { margin: 0; color: #64748b; line-height: 1.5; font-size: .9rem; }
+    .notes { margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    label { display: block; font-weight: 700; margin-bottom: 8px; }
+    textarea { width: 100%; min-height: 110px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font: inherit; resize: vertical; }
+    button { margin-top: 16px; background: #b5232a; border: 0; border-radius: 5px; color: white; padding: 11px 16px; font-weight: 700; cursor: pointer; }
+    @media (max-width: 800px) { body { padding: 20px; } .flow, .notes { grid-template-columns: 1fr; } .step:not(:last-child)::after { content: '↓'; right: 50%; top: auto; bottom: -27px; } .step { margin-bottom: 16px; } header { display: block; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <a class="back" href="../inicio/home_page.html">← Voltar para início</a>
+    <header><div><h1>Macrofluxo</h1><p class="subtitle">Visão macro das etapas do processo para orientar o mapeamento.</p></div></header>
+    <section class="panel">
+      <div class="flow">
+        <article class="step"><span class="number">01</span><h2>Entrada da demanda</h2><p>Receber necessidade, requisito ou ocorrência.</p></article>
+        <article class="step"><span class="number">02</span><h2>Análise</h2><p>Classificar, investigar e definir prioridades.</p></article>
+        <article class="step"><span class="number">03</span><h2>Planejamento</h2><p>Definir responsáveis, prazo e recursos.</p></article>
+        <article class="step"><span class="number">04</span><h2>Execução</h2><p>Implementar ações e acompanhar resultados.</p></article>
+        <article class="step"><span class="number">05</span><h2>Encerramento</h2><p>Validar eficácia, registrar aprendizados e concluir.</p></article>
+      </div>
+      <div class="notes"><div><label for="inputs">Entradas e critérios</label><textarea id="inputs" placeholder="Descreva as entradas principais..."></textarea></div><div><label for="outputs">Saídas e clientes</label><textarea id="outputs" placeholder="Descreva as saídas esperadas..."></textarea></div></div>
+      <button type="button" id="save">Salvar observações</button>
+    </section>
+  </main>
+  <script>const fields = ['inputs', 'outputs']; fields.forEach(id => document.getElementById(id).value = localStorage.getItem('macrofluxo-' + id) || ''); document.getElementById('save').addEventListener('click', () => { fields.forEach(id => localStorage.setItem('macrofluxo-' + id, document.getElementById(id).value)); alert('Macrofluxo salvo.'); });</script>
+</body>
+</html>

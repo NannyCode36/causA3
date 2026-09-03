@@ -13,18 +13,18 @@
       body {
         margin: 0;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: #f4f6fb;
+        background: #f3f6f8;
         color: #2d3347;
         min-height: 100vh;
-        padding: 24px;
+        padding: 18px;
       }
 
       .container {
-        max-width: 1080px;
+        width: min(100%, 1440px);
         margin: 0 auto;
         background: #ffffff;
-        border-radius: 24px;
-        box-shadow: 0 20px 40px rgba(43, 52, 74, 0.08);
+        border-radius: 8px;
+        box-shadow: 0 8px 22px rgba(23, 62, 104, 0.06);
         overflow: hidden;
       }
 
@@ -34,7 +34,7 @@
         align-items: center;
         justify-content: space-between;
         gap: 16px;
-        padding: 28px 32px;
+        padding: 22px 28px;
         background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
         color: #ffffff;
       }
@@ -69,6 +69,10 @@
         padding: 32px;
       }
 
+      .pdf-page {
+        width: 100%;
+      }
+
       .grid-2,
       .grid-3 {
         display: grid;
@@ -86,8 +90,8 @@
       .section {
         background: #f8fafc;
         border: 1px solid rgba(45, 51, 71, 0.1);
-        border-radius: 18px;
-        padding: 22px;
+        border-radius: 8px;
+        padding: 18px;
       }
 
       .section-title {
@@ -96,7 +100,7 @@
         gap: 8px;
         margin-bottom: 16px;
         padding: 8px 12px;
-        border-radius: 999px;
+        border-radius: 5px;
         font-size: 0.95rem;
         font-weight: 700;
         background: #fee2e2;
@@ -118,7 +122,7 @@
       .field textarea {
         width: 100%;
         border: 1px solid rgba(45, 51, 71, 0.18);
-        border-radius: 14px;
+        border-radius: 5px;
         padding: 14px 16px;
         font-size: 1rem;
         font-family: inherit;
@@ -141,6 +145,14 @@
         flex-wrap: wrap;
         gap: 12px;
         margin-top: 16px;
+      }
+
+      @media print {
+        body { padding: 0; background: #fff; }
+        .container { width: 277mm; max-width: none; box-shadow: none; }
+        .actions, .back-link { display: none !important; }
+        .form-area { padding: 10mm; }
+        .section { break-inside: avoid; }
       }
 
       .button,
@@ -479,13 +491,19 @@
       function generatePDF() {
         const element = document.querySelector('.container');
         const opt = {
-          margin: 0.4,
+          margin: [6, 6, 6, 6],
           filename: 'sipoc.pdf',
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+          html2canvas: { scale: 1.25, useCORS: true, scrollY: -window.scrollY },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+          pagebreak: { mode: ['css', 'legacy'] },
         };
-        html2pdf().set(opt).from(element).save();
+        document.querySelector('.actions').style.display = 'none';
+        document.querySelector('.back-link').style.display = 'none';
+        html2pdf().set(opt).from(element).save().then(() => {
+          document.querySelector('.actions').style.display = 'flex';
+          document.querySelector('.back-link').style.display = 'inline-flex';
+        });
       }
 
       const sipocId = getQueryParam('id');

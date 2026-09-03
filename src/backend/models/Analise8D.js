@@ -192,6 +192,8 @@ const analise8DSchema = new mongoose.Schema({
   },
 });
 
+analise8DSchema.index({ status: 1, dataAtualizacao: -1 });
+
 // Middleware para atualizar data de modificação
 analise8DSchema.pre('save', function (next) {
   this.dataAtualizacao = new Date();
